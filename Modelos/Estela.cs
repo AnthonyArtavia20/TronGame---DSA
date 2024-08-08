@@ -1,0 +1,1 @@
+//Contiene: Representación de la estela de la moto usando una lista enlazada
