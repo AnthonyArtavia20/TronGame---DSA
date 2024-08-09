@@ -1,1 +1,6 @@
-//cONTIENE ATRIBUTOS: Posición, velocidad, combustible... y métodos para el movimiento
+//cONTIENE ATRIBUTOS: Posición, velocidad, combustible... y métodos para el movimiento}
+
+namespace Modelos
+{
+    //a
+}
