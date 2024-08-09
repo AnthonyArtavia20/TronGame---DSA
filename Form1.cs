@@ -10,6 +10,8 @@ namespace TronGame
     public partial class Form1 : Form
     {
         private Malla malla;
+        private Moto moto;
+        private TeclasPresionadas teclasPresionadas;
         //Esto inicializa la entrada del Form cuando se le da dotnet run.
         public Form1()
         {
@@ -18,7 +20,11 @@ namespace TronGame
             malla.InicializadadorDeNodos();
             malla.ConectarNodos();
             this.FormBorderStyle = FormBorderStyle.FixedSingle; //Para bloquear la opción del mouse de poder "estirar" o "comprimir" la ventana del forms una vez iniciado, ya que si no buguearía la lista enlazada
+            
+            moto = new Moto(malla.Nodos[0,0]); //Se crea un nuevo objeto de la clase moto y se le pasa como valor de "Posición inicial" [0,0] es decir arriba a la izquierda
+            teclasPresionadas = new TeclasPresionadas(moto,this);
 
+            this.KeyDown += new KeyEventHandler((sender,e) =>teclasPresionadas.MoverMoto(e));
             this.Paint += new PaintEventHandler(DibujarMalla);
         }
 
@@ -37,8 +43,8 @@ namespace TronGame
             En este caso, DrawLine se utiliza para dibujar las líneas que forman la malla.*/
             
             Pen LineasSeparadoras = new Pen(Color.Black); //Color y grosor de las líneas para ver las celdas de la malla.
-            int anchoCelda = this.ClientSize.Width / malla.Columnas;
-            int altoCelda = this.ClientSize.Height / malla.Filas;
+            float anchoCelda = (float)this.ClientSize.Width / malla.Columnas; //Se le hizo un cambio de int a float 
+            float altoCelda = (float)this.ClientSize.Height / malla.Filas;//ya que con int se estaba perdiendo ciertos decimales escenciales para poder calcular las celdas exactas de la lista, entonces se usa float para tener la mayor precisión.
             
 
             /*Dibujar lineas horizontales (Filas de la malla)
@@ -53,6 +59,10 @@ namespace TronGame
             {
                 g.DrawLine(LineasSeparadoras, j * anchoCelda, 0, j * anchoCelda, this.ClientSize.Height);
             }
+
+            //Dibujar la moto
+            SolidBrush brush = new SolidBrush(Color.Red);
+            g.FillRectangle(brush, moto.PosicionActual.Y * anchoCelda, moto.PosicionActual.X * altoCelda, anchoCelda, altoCelda);
         }
     }
 

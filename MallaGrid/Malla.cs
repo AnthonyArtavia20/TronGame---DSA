@@ -37,7 +37,7 @@ namespace MallaGrid
                 {
                     if (i > 0) 
                     {
-                        Nodos[i,j].Arriba = Nodos[i - 1,j]; //Esto es para cuando se analicé desde la segunda fila en adelante, que siempre tendrá un elemento por encima del que está analizando.
+                        Nodos[i,j].Arriba = Nodos[i - 1,j]; //Esto es para cuando se analice desde la segunda fila en adelante, que siempre tendrá un elemento por encima del que está analizando.
                     }
                     if (i < Filas - 1)
                     {
@@ -47,7 +47,11 @@ namespace MallaGrid
                     {
                         Nodos[i,j].Izquierda = Nodos[i, j - 1]; //Mientras j no llegue al tope de las columnas, siempre tendrá a alguien a su izquierda.
                     }
-                    if (j < Columnas - 1) Nodos[i,j].Derecha = Nodos[i,j+1]; //Mientras que no lleguemos al tope de columnas, nos encontraremos a alguien siempre a la derecha.
+                    if (j < Columnas - 1) 
+                    {
+                        Nodos[i,j].Derecha = Nodos[i,j+1]; //Mientras que no lleguemos al tope de columnas, nos encontraremos a alguien siempre a la derecha.
+                    }
+                    
                 }
             }
         }
