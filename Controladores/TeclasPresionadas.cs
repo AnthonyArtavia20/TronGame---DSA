@@ -9,6 +9,7 @@ namespace Controladores
         //es decir no se puede reasignar despues esto es porque la moto del jugador no debería ser reasignada luego, esto permite evitar errores difíciles de rastrear y generados sin querer.
         private readonly Moto moto;
         private readonly Form form;
+        private Keys ultimaTeclaPresionada = Keys.D;//Por defecto inicializada en D
 
         public TeclasPresionadas(Moto moto, Form form)
         {
@@ -18,21 +19,53 @@ namespace Controladores
 
         public void MoverMoto(KeyEventArgs eventoARegistrar)
         {
-            if (eventoARegistrar.KeyCode == Keys.W) //Entonces si se registra un evento de tipo tecla precionada y se categoriza como tecla "W" entonces significa que es subir
-            {                                       //por lo tanto llamamos al método MoverArriba de la clase Moto.
+            if (eventoARegistrar != null)
+            {
+                if (eventoARegistrar.KeyCode == Keys.W) //Entonces si se registra un evento de tipo tecla precionada y se categoriza como tecla "W" entonces significa que es subir
+                {                                       //por lo tanto llamamos al método MoverArriba de la clase Moto.
+                    moto.MoverArriba();
+                    ultimaTeclaPresionada = Keys.W;
+                } else if (eventoARegistrar.KeyCode == Keys.S)
+                {
+                    moto.MoverAbajo();
+                    ultimaTeclaPresionada = Keys.S;
+                } else if (eventoARegistrar.KeyCode == Keys.D) 
+                {
+                    moto.MoverDerecha();
+                    ultimaTeclaPresionada = Keys.D;
+                } else if (eventoARegistrar.KeyCode == Keys.A)
+                {
+                    moto.MoverIzquierda();
+                    ultimaTeclaPresionada = Keys.A;
+                }
+                
+            }else 
+                {
+                    //Si no se especifica una tecla a precionar, entonces se llama a la variable que almacena la última
+                    //tecla precionada.
+                    MantenerEnLaUltimaDireccion();
+                }
+                form.Invalidate(); //Redibujado forzado del forms para mostrar cambios.
+        }
+
+        private void MantenerEnLaUltimaDireccion()
+        {
+            if (ultimaTeclaPresionada == Keys.W)
+            {
                 moto.MoverArriba();
-            } else if (eventoARegistrar.KeyCode == Keys.S)
+            }
+            else if (ultimaTeclaPresionada == Keys.S)
             {
                 moto.MoverAbajo();
-            } else if (eventoARegistrar.KeyCode == Keys.D) 
-            {
-                moto.MoverDerecha();
-            } else if (eventoARegistrar.KeyCode == Keys.A)
+            }
+            else if (ultimaTeclaPresionada == Keys.A)
             {
                 moto.MoverIzquierda();
             }
-
-            form.Invalidate(); //Fuerza un redibujado del forms para poder reflejar el cambio en la LinkedList
+            else if (ultimaTeclaPresionada == Keys.D)
+            {
+                moto.MoverDerecha();
+            }
         }
     }
 }

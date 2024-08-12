@@ -1,5 +1,3 @@
-using System;
-using System.Windows.Forms;
 using Controladores;  // Para acceder a GameController, InputHandler, etc.
 using EstructurasDeDatos;  // Para las estructuras de datos.
 using MallaGrid;  // Para acceder a Malla, Nodo.
@@ -12,7 +10,10 @@ namespace TronGame
         private Malla malla;
         private Moto moto;
         private TeclasPresionadas teclasPresionadas;
+
         //Esto inicializa la entrada del Form cuando se le da dotnet run.
+        private System.Windows.Forms.Timer clockTimer;
+
         public Form1()
         {
             InitializeComponent();
@@ -20,12 +21,25 @@ namespace TronGame
             malla.InicializadadorDeNodos();
             malla.ConectarNodos();
             this.FormBorderStyle = FormBorderStyle.FixedSingle; //Para bloquear la opción del mouse de poder "estirar" o "comprimir" la ventana del forms una vez iniciado, ya que si no buguearía la lista enlazada
+
+            //Timer para refrescar la llamada al método de mover las motos automáticamente cuando no se preciona nada:
+            clockTimer = new System.Windows.Forms.Timer();
+            clockTimer.Interval = 100; // Ajuste este valor según la velocidad deseada
+            clockTimer.Tick += new EventHandler(ClockTimer_Tick);
+            clockTimer.Start();
             
             moto = new Moto(malla.Nodos[0,0]); //Se crea un nuevo objeto de la clase moto y se le pasa como valor de "Posición inicial" [0,0] es decir arriba a la izquierda
             teclasPresionadas = new TeclasPresionadas(moto,this);
 
             this.KeyDown += new KeyEventHandler((sender,e) =>teclasPresionadas.MoverMoto(e));
             this.Paint += new PaintEventHandler(DibujarMalla);
+        }
+
+        //Método para llamar a las telasPresionadas pero cuando no se preciona nada:
+        private void ClockTimer_Tick(object sender,EventArgs e)
+        {
+            teclasPresionadas.MoverMoto(null);
+            this.Invalidate(); //Re-dibujar el forms para mostrar los cambios
         }
 
         //Método para poder dibujar la malla por pantalla, no dibuja la linkedList como tal, si no que dibuja lineas entre las filas y columnas, dando la ilusión de celdas.
@@ -61,8 +75,20 @@ namespace TronGame
             }
 
             //Dibujar la moto
-            SolidBrush brush = new SolidBrush(Color.Red);
-            g.FillRectangle(brush, moto.PosicionActual.Y * anchoCelda, moto.PosicionActual.X * altoCelda, anchoCelda, altoCelda);
+            SolidBrush motoBrush = new SolidBrush(Color.Red);
+            //Dibujar la estela de la moto
+            SolidBrush estelaBrush = new SolidBrush(Color.Blue);
+            
+            //Ciclo for para ir dibujando cada nodo de la estela.
+            var NodoEstelaMotoADibujar = moto.headEstela; //Se tuvo que hacer pública la clase "NodoEstelaMoto" para poder hacer público
+            //la cabeza de la linkedlist headEstela, ya que al estar private, no dejaba acceder a él.
+            while (NodoEstelaMotoADibujar != null)
+            {
+                g.FillRectangle(estelaBrush, NodoEstelaMotoADibujar.Posicion.Y * anchoCelda, NodoEstelaMotoADibujar.Posicion.X * altoCelda, anchoCelda, altoCelda);
+                NodoEstelaMotoADibujar = NodoEstelaMotoADibujar.Siguiente;
+            }
+
+            g.FillRectangle(motoBrush, moto.PosicionActual.Y * anchoCelda, moto.PosicionActual.X * altoCelda, anchoCelda, altoCelda);
         }
     }
 
