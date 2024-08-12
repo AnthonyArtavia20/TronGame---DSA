@@ -24,7 +24,7 @@ namespace Modelos
         //Creamos el constructor de la clase para poder otorgarle el valor x,y donde va a aparecer la moto, es decir el valor incial que se le 
         //va a pasar a esta clase para que inicialice la ubicación inicial ahí:
 
-        public Moto(Nodo posicionInicial,int longitudInicialEstela = 3)
+        public Moto(Nodo posicionInicial,int longitudInicialEstela = 20)
         {
             PosicionActual = posicionInicial; //Posición actual de la moto "Donde aparece"
             longitudEstela = longitudInicialEstela;
@@ -112,7 +112,7 @@ namespace Modelos
                 actual = actual.Siguiente;
             }
             return cantidadDeNodosEnlaEstela;
-        }
+        } 
 
         private void EliminarUtimoNodo()
         {
@@ -143,7 +143,7 @@ namespace Modelos
             var actual = headEstela;
             while (actual != null) //Analiza cada nodo para ver si está opcupado o no.
             {
-                if (actual.Posicion.Equals(nuevaPosicion))  {
+                if (actual.Posicion.Equals(nuevaPosicion))  {                           
                     return true;
                 }
                 actual = actual.Siguiente;
