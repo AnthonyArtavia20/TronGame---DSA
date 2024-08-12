@@ -1,6 +1,6 @@
 //cONTIENE ATRIBUTOS: Posición, velocidad, combustible... y métodos para el movimiento}
-
 using MallaGrid;
+
 
 namespace Modelos
 {
@@ -15,27 +15,28 @@ namespace Modelos
 
         //ATRIBUTOS DE LA MOTO Y SU ESTELA:
         public Nodo PosicionActual {get; private set;}//Creamos un atributo para la posición inicial de la moto
-        public NodoEstelaMoto headEstela;
+        public NodoEstelaMoto? headEstela;
         private int longitudEstela;
         public int Velocidad {get;private set;}
         public int Combustible {get;private set;}
+        private bool estaEnMovimiento;
 
         //Creamos el constructor de la clase para poder otorgarle el valor x,y donde va a aparecer la moto, es decir el valor incial que se le 
         //va a pasar a esta clase para que inicialice la ubicación inicial ahí:
 
-        public Moto(Nodo posicionInicial, int longitudInicialEstela = 3)
+        public Moto(Nodo posicionInicial,int longitudInicialEstela = 3)
         {
             PosicionActual = posicionInicial; //Posición actual de la moto "Donde aparece"
-
             longitudEstela = longitudInicialEstela;
-            Velocidad = new Random().Next(1,6); //Velocidad entre 1 y 5
-            Combustible = 100;// Tanque de combustible lleno
-            InicializarEstalaMoto();
+            Velocidad = 2; //new Random().Next(1,6); //Velocidad entre 1 y 5
+            Combustible = 10;// Tanque de combustible lleno
+            estaEnMovimiento = true; // Inicialmente la moto está en movimiento
+            InicializarEstaleMoto();
         }
 
         //SECTOR, MÉTODOS PARA LA ESTELA:
         
-        private void InicializarEstalaMoto()
+        private void InicializarEstaleMoto()
         {
             NodoEstelaMoto headEstela = new NodoEstelaMoto{Posicion = PosicionActual};
             var actual = headEstela;
@@ -44,12 +45,30 @@ namespace Modelos
                 actual.Siguiente = new NodoEstelaMoto {Posicion = PosicionActual};
                 actual = actual.Siguiente;
             }
+            this.headEstela = headEstela;
         }
 
         private void MoverEstelaMoto(Nodo nuevaPosicion)
         {
             //En resumidas cuenta la estela va creando nodos al frente constantemente y cuando la cantidad de nodos
             //es mayor a la longitud establecida de la estela, entonces se comienza a eliminar el último.
+            if (!estaEnMovimiento) return; // Si la moto no está en movimiento, no hacer nada
+
+            if (!DentroDeLimites(nuevaPosicion))
+            {
+                DetenerMoto(); // Detiene la moto y evita que siga moviéndose
+                MessageBox.Show("Has salido del campo de juego, perdiste");
+                Environment.Exit(1);
+                return;
+            }
+
+            if (VerificarColision(nuevaPosicion)) //Verifica si se chocó con algún nodo ocupado por una estela
+            {
+                DetenerMoto(); // Detiene la moto y evita que siga moviéndose
+                MessageBox.Show("Colisión detectada, perdiste");
+                Environment.Exit(1);
+                return;
+            }
 
             var nuevoNodoDelFrente = new NodoEstelaMoto {Posicion = PosicionActual, Siguiente = headEstela};
             headEstela = nuevoNodoDelFrente;
@@ -60,17 +79,25 @@ namespace Modelos
                 EliminarUtimoNodo();
             }
 
-            PosicionActual = nuevaPosicion;
+            PosicionActual = nuevaPosicion;//nuevaPosicion no es más que la posición a transladar indicadas por
+            //las teclas del treclado, este argumento viene desde MoverArriba, MoverAbbajo, etc...
 
             //A medida que la estela crece, significa que la moto avanza, por lo tanto su combustible debe
             //disminuir. Actualmente será 5 unidades por cada celda de la malla.
 
             // Consumir combustible
-            Combustible -= Velocidad/5;
             Combustible -= Velocidad / 5;
-            if (Combustible < 0) 
+            if (Combustible < 0)
             {
                 Combustible = 0;
+            }
+
+            if (Combustible == 0)
+            {
+                DetenerMoto(); // Detiene la moto y evita que siga moviéndose
+                MessageBox.Show("Te quedaste sin combustible, perdiste");
+                Environment.Exit(1);
+                return;
             }
         }
 
@@ -91,6 +118,7 @@ namespace Modelos
         {
             if (headEstela == null || headEstela.Siguiente == null) //Si resulta que la cabeza de la estala
             {//es null, significa que no hay último elemento por eliminar.
+                headEstela = null;
                 return;
             }
 
@@ -110,15 +138,28 @@ namespace Modelos
 
         //El siguiente método analiza si un acelda está ocupada por la estala, esto sirve para detectar coliciones en un futuro y la prevensión
         //de bugs en la malla.
-        public bool EstaEnEstela(Nodo nodo)
+        public bool VerificarColision(Nodo nuevaPosicion)
         {
             var actual = headEstela;
-            while (actual != null) //Analiza cada 
+            while (actual != null) //Analiza cada nodo para ver si está opcupado o no.
             {
-                if (actual.Posicion == nodo) return true;
+                if (actual.Posicion.Equals(nuevaPosicion))  {
+                    return true;
+                }
                 actual = actual.Siguiente;
             }
             return false;
+        }
+        
+        private bool DentroDeLimites(Nodo posicion)
+        {
+            return posicion.X >= 1 && posicion.X <= 38 && posicion.Y >= 1 && posicion.Y <= 38;
+        }
+
+        private void DetenerMoto()
+        {
+            estaEnMovimiento = false; // Detener la moto
+            // Aquí podrías añadir cualquier otra lógica para finalizar el juego o permitir reiniciar
         }
 
         /*Ahora creamos los diferentes métodos que comprobarán si se puede realizar el movimiento que se desea, esto se logra verificando las

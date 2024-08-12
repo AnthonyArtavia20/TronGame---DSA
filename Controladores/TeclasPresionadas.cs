@@ -9,7 +9,7 @@ namespace Controladores
         //es decir no se puede reasignar despues esto es porque la moto del jugador no debería ser reasignada luego, esto permite evitar errores difíciles de rastrear y generados sin querer.
         private readonly Moto moto;
         private readonly Form form;
-        private Keys ultimaTeclaPresionada = Keys.D;//Por defecto inicializada en D
+        public Keys ultimaTeclaPresionada = Keys.D;//Por defecto inicializada en D
 
         public TeclasPresionadas(Moto moto, Form form)
         {
@@ -48,9 +48,9 @@ namespace Controladores
                 form.Invalidate(); //Redibujado forzado del forms para mostrar cambios.
         }
 
-        private void MantenerEnLaUltimaDireccion()
-        {
-            if (ultimaTeclaPresionada == Keys.W)
+        private void MantenerEnLaUltimaDireccion() //Se llamará al movimiento correspondiente según la última
+        {//tecla precionada, esto se logra almacenando la tecla en una variable que se compara, haciendo que
+            if (ultimaTeclaPresionada == Keys.W)//se comparé aquí y se actualice la coordenadas de la moto.
             {
                 moto.MoverArriba();
             }

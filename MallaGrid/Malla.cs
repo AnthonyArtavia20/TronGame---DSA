@@ -1,6 +1,6 @@
 namespace MallaGrid
 {
-    public class Malla
+    public class Malla //Clase principal encarga de crear la matríz del campo de juego.
     {
         public Nodo[,] Nodos {get; set;} //Creamos una lista multidimencional es decir una matriz 
         public int Filas {get; set;}

@@ -28,7 +28,7 @@ namespace TronGame
             clockTimer.Tick += new EventHandler(ClockTimer_Tick);
             clockTimer.Start();
             
-            moto = new Moto(malla.Nodos[0,0]); //Se crea un nuevo objeto de la clase moto y se le pasa como valor de "Posición inicial" [0,0] es decir arriba a la izquierda
+            moto = new Moto(malla.Nodos[1,1]); //Se crea un nuevo objeto de la clase moto y se le pasa como valor de "Posición inicial" [0,0] es decir arriba a la izquierda
             teclasPresionadas = new TeclasPresionadas(moto,this);
 
             this.KeyDown += new KeyEventHandler((sender,e) =>teclasPresionadas.MoverMoto(e));

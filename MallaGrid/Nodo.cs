@@ -3,7 +3,7 @@ namespace MallaGrid
 {
     public class Nodo
         {
-            public int X {get;set;}
+            public int X {get;set;} //Coordenadas "x" Y "y"
             public int Y {get;set;}
             public Nodo? Arriba {get;set;}
             public Nodo? Abajo {get;set;}
