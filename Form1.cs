@@ -1,3 +1,4 @@
+using System.Net;
 using Controladores;  // Para acceder a GameController, InputHandler, etc.
 using EstructurasDeDatos;  // Para las estructuras de datos.
 using MallaGrid;  // Para acceder a Malla, Nodo.
@@ -10,16 +11,24 @@ namespace TronGame
         private Malla malla;
         private Moto moto;
         private TeclasPresionadas teclasPresionadas;
+        private Random random = new Random(); //Utilizado para poder escoger una ubicación de spawm aleatoria de los bots-
 
         //Esto inicializa la entrada del Form cuando se le da dotnet run.
         private System.Windows.Forms.Timer clockTimer;
 
         public Form1()
         {
-            InitializeComponent();
-            malla = new Malla(40,40);
-            malla.InicializadadorDeNodos();
-            malla.ConectarNodos();
+            InitializeComponent(); //Inicializar todos los componentes.
+
+            //Configuración de doble buffering: Sirve para reducir el parpadeo a la hora de dibujar elementos en la pantalla.
+            this.DoubleBuffered = true;
+
+            malla = new Malla(40,40); //Inicializamos la malla con nodos de 40x40
+            malla.InicializadadorDeNodos(); //Para crear los nodos
+            malla.ConectarNodos();//Para conectarlos todos, formando así una malla con cada nodo con referencias de
+            //izquierda, derecha, abajo y arriba.
+
+            InicializarBots(); // Inicializamos los bots para que se puedan dibujar
             this.FormBorderStyle = FormBorderStyle.FixedSingle; //Para bloquear la opción del mouse de poder "estirar" o "comprimir" la ventana del forms una vez iniciado, ya que si no buguearía la lista enlazada
 
             //Timer para refrescar la llamada al método de mover las motos automáticamente cuando no se preciona nada:
@@ -35,11 +44,18 @@ namespace TronGame
             this.Paint += new PaintEventHandler(DibujarMalla);
         }
 
+        private List<Bots> bots = new List<Bots>();
         //Método para llamar a las telasPresionadas pero cuando no se preciona nada:
-        private void ClockTimer_Tick(object sender,EventArgs e)
+        private void ClockTimer_Tick(object sender, EventArgs e)
         {
             teclasPresionadas.MoverMoto(null);
-            this.Invalidate(); //Re-dibujar el forms para mostrar los cambios
+        
+            foreach (var bot in bots)
+            {
+                bot.MoverAleatoriamenteBots();
+            }
+        
+            this.Invalidate();//Redibujar el forms para mostrar los cambios
         }
 
         //Método para poder dibujar la malla por pantalla, no dibuja la linkedList como tal, si no que dibuja lineas entre las filas y columnas, dando la ilusión de celdas.
@@ -89,7 +105,62 @@ namespace TronGame
             }
 
             g.FillRectangle(motoBrush, moto.PosicionActual.Y * anchoCelda, moto.PosicionActual.X * altoCelda, anchoCelda, altoCelda);
+
+            SolidBrush botBrush = new SolidBrush(Color.Green); // O cualquier otro color que prefieras para los bots
+
+            foreach (var bot in bots)
+            {
+                // Dibujar el bot
+                g.FillRectangle(botBrush, bot.PosicionActual.Y * anchoCelda, bot.PosicionActual.X * altoCelda, anchoCelda, altoCelda);
+
+                // Dibujar la estela del bot
+                SolidBrush estelaBotrush = new SolidBrush(Color.LightGreen); // O cualquier otro color para la estela de los bots
+                var NodoEstelaBotADibujar = bot.headEstela;
+                while (NodoEstelaBotADibujar != null)
+                {
+                    g.FillRectangle(estelaBotrush, NodoEstelaBotADibujar.Posicion.Y * anchoCelda, NodoEstelaBotADibujar.Posicion.X * altoCelda, anchoCelda, altoCelda);
+                    NodoEstelaBotADibujar = NodoEstelaBotADibujar.Siguiente;
+                }
+            }
         }
+        private void InicializarBots()
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                try
+                {
+                    Nodo posicionInicial = PosicionInicialAleatoriaBots();
+                    if (posicionInicial != null)
+                    {
+                        Bots nuevoBot = new Bots(posicionInicial);
+                        bots.Add(nuevoBot);
+                    }
+                    else
+                    {
+                        Console.WriteLine($"No se pudo crear el bot {i + 1}: posición inicial nula");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error al crear el bot {i + 1}: {ex.Message}");
+                }
+            }
+        }
+
+        private Nodo PosicionInicialAleatoriaBots()
+        {
+            int randomSpawn = random.Next(5); // Cambiado a 5 para incluir el caso default
+            switch (randomSpawn)
+            {
+                case 0: return malla.Nodos[5, 5];
+                case 1: return malla.Nodos[10, 10];
+                case 2: return malla.Nodos[15, 15];
+                case 3: return malla.Nodos[7, 7];
+                default: return malla.Nodos[20, 20];
+            }
+        }
+        
+        
     }
 
 }
