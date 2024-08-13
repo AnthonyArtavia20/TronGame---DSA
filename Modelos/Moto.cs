@@ -24,7 +24,7 @@ namespace Modelos
         //Creamos el constructor de la clase para poder otorgarle el valor x,y donde va a aparecer la moto, es decir el valor incial que se le 
         //va a pasar a esta clase para que inicialice la ubicación inicial ahí:
 
-        public Moto(Nodo posicionInicial,int longitudInicialEstela = 20)
+        public Moto(Nodo posicionInicial,int longitudInicialEstela = 3)
         {
             PosicionActual = posicionInicial; //Posición actual de la moto "Donde aparece"
             longitudEstela = longitudInicialEstela;
@@ -48,7 +48,7 @@ namespace Modelos
             this.headEstela = headEstela;
         }
 
-        private void MoverEstelaMoto(Nodo nuevaPosicion)
+        public void MoverEstelaMoto(Nodo nuevaPosicion)
         {
             //En resumidas cuenta la estela va creando nodos al frente constantemente y cuando la cantidad de nodos
             //es mayor a la longitud establecida de la estela, entonces se comienza a eliminar el último.
@@ -56,17 +56,13 @@ namespace Modelos
 
             if (!DentroDeLimites(nuevaPosicion))
             {
-                DetenerMoto(); // Detiene la moto y evita que siga moviéndose
-                MessageBox.Show("Has salido del campo de juego, perdiste");
-                Environment.Exit(1);
+                DetenerMoto("Has salido del campo de juego, perdiste"); // Detiene la moto y evita que siga moviéndose
                 return;
             }
 
             if (VerificarColision(nuevaPosicion)) //Verifica si se chocó con algún nodo ocupado por una estela
             {
-                DetenerMoto(); // Detiene la moto y evita que siga moviéndose
-                MessageBox.Show("Colisión detectada, perdiste");
-                Environment.Exit(1);
+                DetenerMoto("Colisión detectada, perdiste"); // Detiene la moto y evita que siga moviéndose
                 return;
             }
 
@@ -94,9 +90,7 @@ namespace Modelos
 
             if (Combustible == 0)
             {
-                DetenerMoto(); // Detiene la moto y evita que siga moviéndose
-                MessageBox.Show("Te quedaste sin combustible, perdiste");
-                Environment.Exit(1);
+                DetenerMoto("Te quedaste sin combustible, perdiste.");
                 return;
             }
         }
@@ -138,7 +132,7 @@ namespace Modelos
 
         //El siguiente método analiza si un acelda está ocupada por la estala, esto sirve para detectar coliciones en un futuro y la prevensión
         //de bugs en la malla.
-        public bool VerificarColision(Nodo nuevaPosicion)
+        public virtual bool VerificarColision(Nodo nuevaPosicion)
         {
             var actual = headEstela;
             while (actual != null) //Analiza cada nodo para ver si está opcupado o no.
@@ -156,10 +150,11 @@ namespace Modelos
             return posicion.X >= 1 && posicion.X <= 38 && posicion.Y >= 1 && posicion.Y <= 38;
         }
 
-        private void DetenerMoto()
+        public void DetenerMoto(string mensaje)
         {
             estaEnMovimiento = false; // Detener la moto
-            // Aquí podrías añadir cualquier otra lógica para finalizar el juego o permitir reiniciar
+            //MessageBox.Show(mensaje);
+            //Environment.Exit(1);
         }
 
         /*Ahora creamos los diferentes métodos que comprobarán si se puede realizar el movimiento que se desea, esto se logra verificando las

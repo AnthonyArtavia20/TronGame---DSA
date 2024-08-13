@@ -1,6 +1,4 @@
-using System.Net;
 using Controladores;  // Para acceder a GameController, InputHandler, etc.
-using EstructurasDeDatos;  // Para las estructuras de datos.
 using MallaGrid;  // Para acceder a Malla, Nodo.
 using Modelos;  // Para Estela, Items, Moto, etc.
 
@@ -11,6 +9,7 @@ namespace TronGame
         private Malla malla;
         private Moto moto;
         private TeclasPresionadas teclasPresionadas;
+        private MotoJugador motoJugador;
         private Random random = new Random(); //Utilizado para poder escoger una ubicación de spawm aleatoria de los bots-
 
         //Esto inicializa la entrada del Form cuando se le da dotnet run.
@@ -22,6 +21,7 @@ namespace TronGame
 
             //Configuración de doble buffering: Sirve para reducir el parpadeo a la hora de dibujar elementos en la pantalla.
             this.DoubleBuffered = true;
+            this.FormBorderStyle = FormBorderStyle.FixedSingle; //Para bloquear la opción del mouse de poder "estirar" o "comprimir" la ventana del forms una vez iniciado, ya que si no buguearía la lista enlazada
 
             malla = new Malla(40,40); //Inicializamos la malla con nodos de 40x40
             malla.InicializadadorDeNodos(); //Para crear los nodos
@@ -29,7 +29,7 @@ namespace TronGame
             //izquierda, derecha, abajo y arriba.
 
             InicializarBots(); // Inicializamos los bots para que se puedan dibujar
-            this.FormBorderStyle = FormBorderStyle.FixedSingle; //Para bloquear la opción del mouse de poder "estirar" o "comprimir" la ventana del forms una vez iniciado, ya que si no buguearía la lista enlazada
+
 
             //Timer para refrescar la llamada al método de mover las motos automáticamente cuando no se preciona nada:
             clockTimer = new System.Windows.Forms.Timer();
@@ -37,14 +37,15 @@ namespace TronGame
             clockTimer.Tick += new EventHandler(ClockTimer_Tick);
             clockTimer.Start();
             
-            moto = new Moto(malla.Nodos[1,1]); //Se crea un nuevo objeto de la clase moto y se le pasa como valor de "Posición inicial" [0,0] es decir arriba a la izquierda
-            teclasPresionadas = new TeclasPresionadas(moto,this);
+            motoJugador = new MotoJugador(malla.Nodos[1,1]); //Se crea un nuevo objeto de la clase moto y se le pasa como valor de "Posición inicial" [0,0] es decir arriba a la izquierda
+            moto = motoJugador; // Si `moto` debe ser `motoJugador`
+            teclasPresionadas = new TeclasPresionadas(motoJugador,this);
 
             this.KeyDown += new KeyEventHandler((sender,e) =>teclasPresionadas.MoverMoto(e));
             this.Paint += new PaintEventHandler(DibujarMalla);
         }
 
-        private List<Bots> bots = new List<Bots>();
+        private List<Bots> bots = new List<Bots>(); //Lista de bots
         //Método para llamar a las telasPresionadas pero cuando no se preciona nada:
         private void ClockTimer_Tick(object sender, EventArgs e)
         {
@@ -52,7 +53,8 @@ namespace TronGame
         
             foreach (var bot in bots)
             {
-                bot.MoverAleatoriamenteBots();
+                bot.MoverAleatoriamenteBots(bots); //Se pasa la lista de bots para poder comparar colisiones entre
+                //ellos mismos y entre el jugador.
             }
         
             this.Invalidate();//Redibujar el forms para mostrar los cambios
@@ -90,27 +92,28 @@ namespace TronGame
                 g.DrawLine(LineasSeparadoras, j * anchoCelda, 0, j * anchoCelda, this.ClientSize.Height);
             }
 
-            //Dibujar la moto
-            SolidBrush motoBrush = new SolidBrush(Color.Red);
-            //Dibujar la estela de la moto
-            SolidBrush estelaBrush = new SolidBrush(Color.Blue);
-            
-            //Ciclo for para ir dibujando cada nodo de la estela.
-            var NodoEstelaMotoADibujar = moto.headEstela; //Se tuvo que hacer pública la clase "NodoEstelaMoto" para poder hacer público
-            //la cabeza de la linkedlist headEstela, ya que al estar private, no dejaba acceder a él.
-            while (NodoEstelaMotoADibujar != null)
+            if (moto != null)
             {
-                g.FillRectangle(estelaBrush, NodoEstelaMotoADibujar.Posicion.Y * anchoCelda, NodoEstelaMotoADibujar.Posicion.X * altoCelda, anchoCelda, altoCelda);
-                NodoEstelaMotoADibujar = NodoEstelaMotoADibujar.Siguiente;
+                SolidBrush motoBrush = new SolidBrush(Color.Red);
+                SolidBrush estelaBrush = new SolidBrush(Color.Blue);
+        
+                var NodoEstelaMotoADibujar = moto.headEstela;
+                while (NodoEstelaMotoADibujar != null)
+                {
+                    g.FillRectangle(estelaBrush, NodoEstelaMotoADibujar.Posicion.Y * anchoCelda, NodoEstelaMotoADibujar.Posicion.X * altoCelda, anchoCelda, altoCelda);
+                    NodoEstelaMotoADibujar = NodoEstelaMotoADibujar.Siguiente;
+                }
+        
+                g.FillRectangle(motoBrush, moto.PosicionActual.Y * anchoCelda, moto.PosicionActual.X * altoCelda, anchoCelda, altoCelda);
             }
 
-            g.FillRectangle(motoBrush, moto.PosicionActual.Y * anchoCelda, moto.PosicionActual.X * altoCelda, anchoCelda, altoCelda);
 
             SolidBrush botBrush = new SolidBrush(Color.Green); // O cualquier otro color que prefieras para los bots
-
             foreach (var bot in bots)
             {
-                // Dibujar el bot
+                if (bot != null)
+                {
+                    // Dibujar el bot
                 g.FillRectangle(botBrush, bot.PosicionActual.Y * anchoCelda, bot.PosicionActual.X * altoCelda, anchoCelda, altoCelda);
 
                 // Dibujar la estela del bot
@@ -120,6 +123,7 @@ namespace TronGame
                 {
                     g.FillRectangle(estelaBotrush, NodoEstelaBotADibujar.Posicion.Y * anchoCelda, NodoEstelaBotADibujar.Posicion.X * altoCelda, anchoCelda, altoCelda);
                     NodoEstelaBotADibujar = NodoEstelaBotADibujar.Siguiente;
+                }
                 }
             }
         }
