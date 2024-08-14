@@ -10,6 +10,7 @@ namespace TronGame
         private Moto moto;
         private TeclasPresionadas teclasPresionadas;
         private MotoJugador motoJugador;
+        public List<Bots> bots = new List<Bots>(); //Lista de bots
         private Random random = new Random(); //Utilizado para poder escoger una ubicación de spawm aleatoria de los bots-
 
         //Esto inicializa la entrada del Form cuando se le da dotnet run.
@@ -37,27 +38,42 @@ namespace TronGame
             clockTimer.Tick += new EventHandler(ClockTimer_Tick);
             clockTimer.Start();
             
-            motoJugador = new MotoJugador(malla.Nodos[1,1]); //Se crea un nuevo objeto de la clase moto y se le pasa como valor de "Posición inicial" [0,0] es decir arriba a la izquierda
+            motoJugador = new MotoJugador(malla.Nodos[20,20]); //Se crea un nuevo objeto de la clase moto y se le pasa como valor de "Posición inicial" [0,0] es decir arriba a la izquierda
             moto = motoJugador; // Si `moto` debe ser `motoJugador`
             teclasPresionadas = new TeclasPresionadas(motoJugador,this);
 
             this.KeyDown += new KeyEventHandler((sender,e) =>teclasPresionadas.MoverMoto(e));
             this.Paint += new PaintEventHandler(DibujarMalla);
         }
-
-        private List<Bots> bots = new List<Bots>(); //Lista de bots
+        
         //Método para llamar a las telasPresionadas pero cuando no se preciona nada:
         private void ClockTimer_Tick(object sender, EventArgs e)
         {
             teclasPresionadas.MoverMoto(null);
+            if (motoJugador.VerificarColisionConBots(bots))
+            {
+                clockTimer.Stop();
+                return;
+            }
+        
+            List<Bots> botsParaEliminar = new List<Bots>();
         
             foreach (var bot in bots)
             {
-                bot.MoverAleatoriamenteBots(bots); //Se pasa la lista de bots para poder comparar colisiones entre
-                //ellos mismos y entre el jugador.
+                bot.MoverAleatoriamenteBots(bots, motoJugador);
+                if (!bot.estaEnMovimiento)
+                {
+                    botsParaEliminar.Add(bot);
+                }
             }
         
-            this.Invalidate();//Redibujar el forms para mostrar los cambios
+            // Eliminar los bots que chocaron
+            foreach (var bot in botsParaEliminar)
+            {
+                bots.Remove(bot);
+            }
+        
+            this.Invalidate();
         }
 
         //Método para poder dibujar la malla por pantalla, no dibuja la linkedList como tal, si no que dibuja lineas entre las filas y columnas, dando la ilusión de celdas.
@@ -113,17 +129,18 @@ namespace TronGame
             {
                 if (bot != null)
                 {
-                    // Dibujar el bot
-                g.FillRectangle(botBrush, bot.PosicionActual.Y * anchoCelda, bot.PosicionActual.X * altoCelda, anchoCelda, altoCelda);
+                        // Dibujar el bot
+                    g.FillRectangle(botBrush, bot.PosicionActual.Y * anchoCelda, bot.PosicionActual.X * altoCelda, anchoCelda, altoCelda);
 
-                // Dibujar la estela del bot
-                SolidBrush estelaBotrush = new SolidBrush(Color.LightGreen); // O cualquier otro color para la estela de los bots
-                var NodoEstelaBotADibujar = bot.headEstela;
-                while (NodoEstelaBotADibujar != null)
-                {
-                    g.FillRectangle(estelaBotrush, NodoEstelaBotADibujar.Posicion.Y * anchoCelda, NodoEstelaBotADibujar.Posicion.X * altoCelda, anchoCelda, altoCelda);
-                    NodoEstelaBotADibujar = NodoEstelaBotADibujar.Siguiente;
-                }
+                    // Dibujar la estela del bot
+                    SolidBrush estelaBotrush = new SolidBrush(Color.LightGreen); // O cualquier otro color para la estela de los bots
+                    var NodoEstelaBotADibujar = bot.headEstela;
+                    
+                    while (NodoEstelaBotADibujar != null)
+                    {
+                        g.FillRectangle(estelaBotrush, NodoEstelaBotADibujar.Posicion.Y * anchoCelda, NodoEstelaBotADibujar.Posicion.X * altoCelda, anchoCelda, altoCelda);
+                        NodoEstelaBotADibujar = NodoEstelaBotADibujar.Siguiente;
+                    }
                 }
             }
         }

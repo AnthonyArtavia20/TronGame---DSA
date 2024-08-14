@@ -1,12 +1,10 @@
 //cONTIENE ATRIBUTOS: Posición, velocidad, combustible... y métodos para el movimiento}
 using MallaGrid;
 
-
 namespace Modelos
 {
     public class Moto
     {
-
         public class NodoEstelaMoto
         {
             public Nodo? Posicion {get;set;}
@@ -142,7 +140,7 @@ namespace Modelos
                 }
                 actual = actual.Siguiente;
             }
-            return false;
+            return PosicionActual.Equals(nuevaPosicion);
         }
         
         private bool DentroDeLimites(Nodo posicion)
