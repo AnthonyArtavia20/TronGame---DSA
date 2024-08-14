@@ -19,7 +19,7 @@ namespace Modelos
         private int longitudEstela;
         public int Velocidad {get;private set;}
         public int Combustible {get;private set;}
-        private bool estaEnMovimiento;
+        public bool estaEnMovimiento;
 
         //Creamos el constructor de la clase para poder otorgarle el valor x,y donde va a aparecer la moto, es decir el valor incial que se le 
         //va a pasar a esta clase para que inicialice la ubicación inicial ahí:
@@ -56,13 +56,13 @@ namespace Modelos
 
             if (!DentroDeLimites(nuevaPosicion))
             {
-                DetenerMoto("Has salido del campo de juego, perdiste"); // Detiene la moto y evita que siga moviéndose
+                DetenerMoto(); // Detiene la moto y evita que siga moviéndose
                 return;
             }
 
             if (VerificarColision(nuevaPosicion)) //Verifica si se chocó con algún nodo ocupado por una estela
             {
-                DetenerMoto("Colisión detectada, perdiste"); // Detiene la moto y evita que siga moviéndose
+                DetenerMoto(); // Detiene la moto y evita que siga moviéndose
                 return;
             }
 
@@ -90,7 +90,7 @@ namespace Modelos
 
             if (Combustible == 0)
             {
-                DetenerMoto("Te quedaste sin combustible, perdiste.");
+                DetenerMoto();
                 return;
             }
         }
@@ -150,11 +150,9 @@ namespace Modelos
             return posicion.X >= 1 && posicion.X <= 38 && posicion.Y >= 1 && posicion.Y <= 38;
         }
 
-        public void DetenerMoto(string mensaje)
+        public void DetenerMoto()
         {
             estaEnMovimiento = false; // Detener la moto
-            //MessageBox.Show(mensaje);
-            //Environment.Exit(1);
         }
 
         /*Ahora creamos los diferentes métodos que comprobarán si se puede realizar el movimiento que se desea, esto se logra verificando las

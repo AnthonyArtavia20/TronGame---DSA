@@ -12,13 +12,17 @@ namespace Modelos
         {
             if (base.VerificarColision(nodo))
             {
-                DetenerMoto("Colisión detectada, perdiste");
+                MessageBox.Show("Colisión detectada, perdiste");
+                estaEnMovimiento = false;
+                Environment.Exit(0);
                 return true;
             }
 
             if (Combustible == 0)
             {
-                DetenerMoto("Te quedaste sin combustible, perdiste");
+                MessageBox.Show("Te quedaste sin combustible, perdiste");
+                estaEnMovimiento = false;
+                Environment.Exit(0);
                 return true;
             }
             return false;
