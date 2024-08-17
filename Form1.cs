@@ -29,21 +29,33 @@ namespace TronGame
             malla.ConectarNodos();//Para conectarlos todos, formando así una malla con cada nodo con referencias de
             //izquierda, derecha, abajo y arriba.
 
-            InicializarBots(); // Inicializamos los bots para que se puedan dibujar
+            motoJugador = new MotoJugador(malla.Nodos[20,20]); //Se crea un nuevo objeto de la clase moto y se le pasa como valor de "Posición inicial" [0,0] es decir arriba a la izquierda
+            moto = motoJugador; // Si `moto` debe ser `motoJugador`
+            teclasPresionadas = new TeclasPresionadas(motoJugador,this);
 
+            // Establecer el nivel inicial de la barra de progreso al nivel de combustible de la moto
+            barraCantidadDeCombustible.Value = motoJugador.Combustible;
+
+            InicializarBots(); // Inicializamos los bots para que se puedan dibujar
 
             //Timer para refrescar la llamada al método de mover las motos automáticamente cuando no se preciona nada:
             clockTimer = new System.Windows.Forms.Timer();
             clockTimer.Interval = 100; // Ajuste este valor según la velocidad deseada
             clockTimer.Tick += new EventHandler(ClockTimer_Tick);
+            clockTimer.Tick += (s, e) => UpdateFuelBar(); //Actualizar la barra de combustible
             clockTimer.Start();
             
-            motoJugador = new MotoJugador(malla.Nodos[20,20]); //Se crea un nuevo objeto de la clase moto y se le pasa como valor de "Posición inicial" [0,0] es decir arriba a la izquierda
-            moto = motoJugador; // Si `moto` debe ser `motoJugador`
-            teclasPresionadas = new TeclasPresionadas(motoJugador,this);
-
             this.KeyDown += new KeyEventHandler((sender,e) =>teclasPresionadas.MoverMoto(e));
             this.Paint += new PaintEventHandler(DibujarMalla);
+        }
+
+        // Método para actualizar la barra de combustible
+        private void UpdateFuelBar()
+        {
+            if (moto != null)
+            {
+                barraCantidadDeCombustible.Value = Math.Max(0, Math.Min(motoJugador.Combustible, barraCantidadDeCombustible.Maximum));
+            }
         }
         
         //Método para llamar a las telasPresionadas pero cuando no se preciona nada:
@@ -53,7 +65,16 @@ namespace TronGame
             if (motoJugador.VerificarColisionConBots(bots))
             {
                 clockTimer.Stop();
+                MessageBox.Show("Colisión con un bot");
+                Environment.Exit(0);
                 return;
+            }
+
+            if (motoJugador.VerificarCombustible())
+            {
+                clockTimer.Stop();
+                MessageBox.Show("¡Combustible acabado!");  // Muestra el mensaje solo una vez
+                Environment.Exit(0);  // Luego cierra la aplicaciónreturn;
             }
         
             List<Bots> botsParaEliminar = new List<Bots>();
@@ -180,8 +201,6 @@ namespace TronGame
                 default: return malla.Nodos[20, 20];
             }
         }
-        
-        
     }
 
 }

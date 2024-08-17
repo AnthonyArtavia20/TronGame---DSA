@@ -26,8 +26,9 @@ namespace Modelos
         {
             PosicionActual = posicionInicial; //Posición actual de la moto "Donde aparece"
             longitudEstela = longitudInicialEstela;
-            Velocidad = 2; //new Random().Next(1,6); //Velocidad entre 1 y 5
-            Combustible = 10;// Tanque de combustible lleno
+            Velocidad = 5; 
+            //Velocidad = new Random().Next(1,6); //Velocidad entre 1 y 5
+            Combustible = 100;// Tanque de combustible lleno
             estaEnMovimiento = true; // Inicialmente la moto está en movimiento
             InicializarEstaleMoto();
         }
@@ -81,6 +82,7 @@ namespace Modelos
 
             // Consumir combustible
             Combustible -= Velocidad / 5;
+            
             if (Combustible < 0)
             {
                 Combustible = 0;
@@ -148,7 +150,7 @@ namespace Modelos
             return posicion.X >= 1 && posicion.X <= 38 && posicion.Y >= 1 && posicion.Y <= 38;
         }
 
-        public void DetenerMoto()
+        public void DetenerMoto()//Creado para facilitar la escritura del movimeinto en false.
         {
             estaEnMovimiento = false; // Detener la moto
         }
