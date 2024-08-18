@@ -5,20 +5,20 @@ namespace Controladores
 {
     public class TeclasPresionadas
     {
-        //Se le otorgó readonly a los atributos para que solo sepuedan asignar en el momento de la declaración o dentro del constructor de la clase.
-        //es decir no se puede reasignar despues esto es porque la moto del jugador no debería ser reasignada luego, esto permite evitar errores difíciles de rastrear y generados sin querer.
+        //Se le otorgó readonly a los atributos para que solo se puedan asignar en el momento de la declaración o dentro del constructor de la clase.
+        //es decir no se puede reasignar después esto es porque la moto del jugador no debería ser reasignada luego, esto permite evitar errores difíciles de rastrear y generados sin querer.
         private readonly Moto moto;
         private readonly Form form;
-        public Keys ultimaTeclaPresionada = Keys.D;//Por defecto inicializada en D
+        public Keys ultimaTeclaPresionada = Keys.D;//Por defecto inicializada en D, almacena la tecla presioanda para poder seguir desplazandose en esa dirección.
 
-        public TeclasPresionadas(Moto moto, Form form)
+        public TeclasPresionadas(Moto moto, Form form)//Constructor
         {
             this.moto = moto;
             this.form = form;
         }
 
-        public void MoverMoto(KeyEventArgs eventoARegistrar)
-        {
+        public void MoverMoto(KeyEventArgs eventoARegistrar)//Método que recibe la tecla presionada de modo que
+        {//se pueda alterar la dirección de desplazamiento.
             if (eventoARegistrar != null)
             {
                 if (eventoARegistrar.KeyCode == Keys.W) //Entonces si se registra un evento de tipo tecla precionada y se categoriza como tecla "W" entonces significa que es subir

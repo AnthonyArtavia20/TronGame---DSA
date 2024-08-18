@@ -6,6 +6,8 @@ namespace TronGame
 {
     public partial class Form1 : Form
     {
+
+        //-------------------------------Atributos(Inicio)----------------------------------------
         private Malla malla;
         private Moto moto;
         private TeclasPresionadas teclasPresionadas;
@@ -16,7 +18,9 @@ namespace TronGame
         //Esto inicializa la entrada del Form cuando se le da dotnet run.
         private System.Windows.Forms.Timer clockTimer;
 
-        public Form1()
+        //-------------------------------Atributos(End)----------------------------------------
+
+        public Form1() //Constructor que inicializa todos los componentes e instancias.
         {
             InitializeComponent(); //Inicializar todos los componentes.
 
@@ -29,7 +33,7 @@ namespace TronGame
             malla.ConectarNodos();//Para conectarlos todos, formando así una malla con cada nodo con referencias de
             //izquierda, derecha, abajo y arriba.
 
-            motoJugador = new MotoJugador(malla.Nodos[20,20]); //Se crea un nuevo objeto de la clase moto y se le pasa como valor de "Posición inicial" [0,0] es decir arriba a la izquierda
+            motoJugador = new MotoJugador(malla.Nodos[25,20], malla); //Se crea un nuevo objeto de la clase moto y se le pasa como valor de "Posición inicial" [0,0] es decir arriba a la izquierda
             moto = motoJugador; // Si `moto` debe ser `motoJugador`
             teclasPresionadas = new TeclasPresionadas(motoJugador,this);
 
@@ -40,17 +44,18 @@ namespace TronGame
 
             //Timer para refrescar la llamada al método de mover las motos automáticamente cuando no se preciona nada:
             clockTimer = new System.Windows.Forms.Timer();
-            clockTimer.Interval = 100; // Ajuste este valor según la velocidad deseada
+            clockTimer.Interval = 100; // 
             clockTimer.Tick += new EventHandler(ClockTimer_Tick);
+
+
             clockTimer.Tick += (s, e) => UpdateFuelBar(); //Actualizar la barra de combustible
-            clockTimer.Start();
+            clockTimer.Start(); //Inicia el timer del forms
             
-            this.KeyDown += new KeyEventHandler((sender,e) =>teclasPresionadas.MoverMoto(e));
-            this.Paint += new PaintEventHandler(DibujarMalla);
+            this.KeyDown += new KeyEventHandler((sender,e) =>teclasPresionadas.MoverMoto(e)); //Enviamos los eventos registrados como evento tipo KeyDowm
+            this.Paint += new PaintEventHandler(DibujarMalla);//Luiego dibujamos todos los componentes.
         }
 
-        // Método para actualizar la barra de combustible
-        private void UpdateFuelBar()
+        private void UpdateFuelBar()//Método para actualizar la barra de combustible
         {
             if (moto != null)
             {
@@ -62,6 +67,14 @@ namespace TronGame
         private void ClockTimer_Tick(object sender, EventArgs e)
         {
             teclasPresionadas.MoverMoto(null);
+            if (motoJugador.VerificarDentroDeLimites())
+            {
+                clockTimer.Stop();
+                MessageBox.Show("¡Has chocado con un muro!");
+                Environment.Exit(0);
+                return;
+            }
+
             if (motoJugador.VerificarColisionConBots(bots))
             {
                 clockTimer.Stop();
@@ -70,21 +83,25 @@ namespace TronGame
                 return;
             }
 
+
             if (motoJugador.VerificarCombustible())
             {
                 clockTimer.Stop();
                 MessageBox.Show("¡Combustible acabado!");  // Muestra el mensaje solo una vez
-                Environment.Exit(0);  // Luego cierra la aplicaciónreturn;
+                Environment.Exit(0);  // Luego cierra la aplicación
+                return;
             }
         
-            List<Bots> botsParaEliminar = new List<Bots>();
+            List<Bots> botsParaEliminar = new List<Bots>(); //Esta lista sirve para  almacenar los bots que han chocado con alguna estela
+            //para posterior eliminarlos de la lista.
         
-            foreach (var bot in bots)
+            foreach (var bot in bots) //Se itera sonre la lista principal de bots
             {
-                bot.MoverAleatoriamenteBots(bots, motoJugador);
+                bot.MoverAleatoriamenteBots(bots, motoJugador);//Se ingresa la lista y la instancia de la moto del jugador para luego,
+                //si un bot no está en movimiento, se agrega a la lista de eliminación.
                 if (!bot.estaEnMovimiento)
                 {
-                    botsParaEliminar.Add(bot);
+                    botsParaEliminar.Add(bot);//Aquí
                 }
             }
         
@@ -94,7 +111,7 @@ namespace TronGame
                 bots.Remove(bot);
             }
         
-            this.Invalidate();
+            this.Invalidate();//Refrescar el dibujado de objetos por pantalla para notar los cambios.
         }
 
         //Método para poder dibujar la malla por pantalla, no dibuja la linkedList como tal, si no que dibuja lineas entre las filas y columnas, dando la ilusión de celdas.
@@ -129,7 +146,7 @@ namespace TronGame
                 g.DrawLine(LineasSeparadoras, j * anchoCelda, 0, j * anchoCelda, this.ClientSize.Height);
             }
 
-            if (moto != null)
+            if (moto != null) //Dibujar la Moto del jugador y su estela
             {
                 SolidBrush motoBrush = new SolidBrush(Color.Red);
                 SolidBrush estelaBrush = new SolidBrush(Color.Blue);
@@ -145,36 +162,54 @@ namespace TronGame
             }
 
 
-            SolidBrush botBrush = new SolidBrush(Color.Green); // O cualquier otro color que prefieras para los bots
+            //Dibujar bots -->
+
             foreach (var bot in bots)
             {
                 if (bot != null)
                 {
-                        // Dibujar el bot
-                    g.FillRectangle(botBrush, bot.PosicionActual.Y * anchoCelda, bot.PosicionActual.X * altoCelda, anchoCelda, altoCelda);
+                    SolidBrush botHeadBrush = new SolidBrush(Color.DarkGreen); // Color más oscuro para la cabeza del bot
+                    SolidBrush botEstelaBrush = new SolidBrush(bot.ColorEstela); // Color más claro para la estela del bot
 
-                    // Dibujar la estela del bot
-                    SolidBrush estelaBotrush = new SolidBrush(Color.LightGreen); // O cualquier otro color para la estela de los bots
+                    // Dibujar la estela del bot primero
                     var NodoEstelaBotADibujar = bot.headEstela;
-                    
                     while (NodoEstelaBotADibujar != null)
                     {
-                        g.FillRectangle(estelaBotrush, NodoEstelaBotADibujar.Posicion.Y * anchoCelda, NodoEstelaBotADibujar.Posicion.X * altoCelda, anchoCelda, altoCelda);
+                        if (NodoEstelaBotADibujar.Posicion != null)
+                        {
+                            g.FillRectangle(botEstelaBrush, 
+                                NodoEstelaBotADibujar.Posicion.Y * anchoCelda, 
+                                NodoEstelaBotADibujar.Posicion.X * altoCelda, 
+                                anchoCelda, altoCelda);
+                        }
                         NodoEstelaBotADibujar = NodoEstelaBotADibujar.Siguiente;
+                    }
+
+                    // Dibujar la cabeza del bot después
+                    if (bot.PosicionActual != null)
+                    {
+                        g.FillRectangle(botHeadBrush, 
+                            bot.PosicionActual.Y * anchoCelda, 
+                            bot.PosicionActual.X * altoCelda, 
+                            anchoCelda, altoCelda);
                     }
                 }
             }
         }
         private void InicializarBots()
-        {
-            for (int i = 0; i < 4; i++)
+        {   
+            //Creación de una lista que contiene algunos colores para los bots.
+            List<Color> coloresDisponibles = new List<Color> { Color.LightGreen, Color.OrangeRed, Color.Yellow, Color.Violet };
+            for (int i = 0; i < 4; i++)//Ciclo que crea cuanta cantidad de bots se necesite.
             {
                 try
-                {
+                { //posicionInicial es una de 5 posibles lugares de spawm definidas en una función que las da aleatoriamente.
                     Nodo posicionInicial = PosicionInicialAleatoriaBots();
                     if (posicionInicial != null)
                     {
-                        Bots nuevoBot = new Bots(posicionInicial);
+                        //Asignación de un color de estela distinto para cada bot:
+                        Color ColorEstela = coloresDisponibles[ i % coloresDisponibles.Count];
+                        Bots nuevoBot = new Bots(posicionInicial,malla,ColorEstela);
                         bots.Add(nuevoBot);
                     }
                     else
@@ -189,7 +224,7 @@ namespace TronGame
             }
         }
 
-        private Nodo PosicionInicialAleatoriaBots()
+        private Nodo PosicionInicialAleatoriaBots() //Método encargado de dar lugares de spawn randoms para lso bots.
         {
             int randomSpawn = random.Next(5); // Cambiado a 5 para incluir el caso default
             switch (randomSpawn)
@@ -201,6 +236,18 @@ namespace TronGame
                 default: return malla.Nodos[20, 20];
             }
         }
-    }
 
+        //private void ColorAleatorioBots()
+        //{
+        //    int ColorRandom = random.Next(5);
+        //    switch (ColorRandom)
+        //    {
+        //        case 0: ;
+        //        case 1: ;
+        //        case 2: ;
+        //        case 3: ;
+        //        default:;
+        //    }
+        //}
+    }
 }

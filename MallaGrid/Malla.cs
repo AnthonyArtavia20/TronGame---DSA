@@ -60,5 +60,14 @@ namespace MallaGrid
                 }
             }
         }
+
+        public bool NodosDeLosBordes(Nodo nodo)
+        {
+            /*Método encargado de hacer una verificación de los bordes de la lista enlazada.
+            Esto se utiiza para poder definir los límites del campo de juego.
+            Nota: Se decidió hacer esto así ya que verificando con cordenadas y cálculos ya que resultaba muy difícil
+            detectar errores generados por esto*/
+            return nodo.X == 0 || nodo.X == Filas-1 || nodo.Y == 0 ||nodo.Y == Columnas -1;
+        }
     }
 }

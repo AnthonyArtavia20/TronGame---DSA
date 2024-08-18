@@ -1,4 +1,6 @@
-﻿namespace TronGame;
+﻿
+//Archivvo que contiene todos componentes a dibujar
+namespace TronGame;
 
 partial class Form1
 {
@@ -14,7 +16,7 @@ partial class Form1
         base.Dispose(disposing);
     }
 
-    private void InitializeComponent()
+    private void InitializeComponent() //Inicializa todos los objetos a visualizar por pantalla
     {
         this.components = new System.ComponentModel.Container();
         this.barraCantidadDeCombustible = new System.Windows.Forms.ProgressBar();
@@ -30,8 +32,7 @@ partial class Form1
         this.Controls.Add(this.barraCantidadDeCombustible);
         
         this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-        this.ClientSize = new System.Drawing.Size(900, 600); //ancho, alto
+        this.ClientSize = new System.Drawing.Size(1200, 700); //ancho, alto
         this.Text = "Tron Game";
     }
-
 }
