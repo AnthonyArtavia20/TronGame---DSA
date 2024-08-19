@@ -207,13 +207,15 @@ namespace TronGame
                     Nodo posicionInicial = PosicionInicialAleatoriaBots();
                     if (posicionInicial != null)
                     {
-                        //Asignación de un color de estela distinto para cada bot:
-                        Color ColorEstela = coloresDisponibles[ i % coloresDisponibles.Count];
-                        Bots nuevoBot = new Bots(posicionInicial,malla,ColorEstela);
+                        
+                        Color ColorEstela = coloresDisponibles[ i % coloresDisponibles.Count];//Asignación de un color de estela distinto para cada bot:
+                        int velocidadBots = random.Next( 1, 4 ); //Velocidad aleatoria para bots de forma aleatoria. funciona similar a la del jugador.
+
+                        Bots nuevoBot = new Bots(posicionInicial,malla,ColorEstela,velocidadBots);
                         bots.Add(nuevoBot);
                     }
                     else
-                    {
+                    {//Se creó esto para identificar porqué no se creaban los bots.
                         Console.WriteLine($"No se pudo crear el bot {i + 1}: posición inicial nula");
                     }
                 }
@@ -236,18 +238,5 @@ namespace TronGame
                 default: return malla.Nodos[20, 20];
             }
         }
-
-        //private void ColorAleatorioBots()
-        //{
-        //    int ColorRandom = random.Next(5);
-        //    switch (ColorRandom)
-        //    {
-        //        case 0: ;
-        //        case 1: ;
-        //        case 2: ;
-        //        case 3: ;
-        //        default:;
-        //    }
-        //}
     }
 }

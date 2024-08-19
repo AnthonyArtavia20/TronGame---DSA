@@ -31,8 +31,8 @@ namespace Modelos
             PosicionActual = posicionInicial; //Posición actual de la moto "Donde aparece"
             this.malla = malla; //Para poder comparar los nodos de los bordes
             longitudEstela = longitudInicialEstela+1;
-            Velocidad = 1; //Velocidad setteable
-            //Velocidad = new Random().Next(1,3); //Velocidad entre 1 y 3
+            //Velocidad = 1; //Velocidad setteable
+            Velocidad = new Random().Next(1,3); //Velocidad entre 1 y 3
             Combustible = 100;// Tanque de combustible lleno
             estaEnMovimiento = true; // Inicialmente la moto está en movimiento
             InicializarEstaleMoto();
