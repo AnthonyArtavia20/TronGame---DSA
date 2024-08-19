@@ -77,28 +77,48 @@ namespace MallaGrid
 
         public void GenerarItemAleatorio()
         {
+            int cantidadMaximaDeAumentosEstela = 10;
+            int cantidadMaximaDeCeldasCombustible = 20;
 
-            int x, y;
-            int x2, y2;
-            do
+            //Generación de aumentos de estela:
+            for (int i = 0; i < cantidadMaximaDeAumentosEstela; i++)
             {
-                x2 = random.Next(0, Filas);
-                y2 = random.Next(0, Columnas);
+                int x;
+                int y;
 
-                x = random.Next(0, Filas);
-                y = random.Next(0, Columnas);
-            } while (Nodos[x, y].EstaOcupado || Nodos[x2, y2].EstaOcupado );
+                do
+                {
+                    x = random.Next(0, Filas);
+                    y = random.Next(0,Columnas);
 
-            ItemAumentarEstela nuevoItem = new ItemAumentarEstela(Nodos[x, y]);
-            ItemCombustible nuevoItemCombustible = new ItemCombustible(Nodos[x2,y2]);
+                } while (Nodos[x,y].EstaOcupado);
 
-            ItemsEnMalla.Add(nuevoItem);
-            ItemsEnMalla.Add(nuevoItemCombustible);
-            Nodos[x, y].EstaOcupado = true;
-            Nodos[x2, y2].EstaOcupado = true;
+                ItemAumentarEstela nuevoItem = new ItemAumentarEstela(Nodos[x,y]);
+                ItemsEnMalla.Add(nuevoItem);
+                Nodos[x,y].EstaOcupado = true;
 
-            Console.WriteLine($"Nuevo ítem Estela generado en ({x}, {y}). Imagen cargada: {nuevoItem.Imagen != null}");
-            Console.WriteLine($"Nuevo ítem Combustible generado en ({x2}, {y2}). Imagen cargada: {nuevoItemCombustible.Imagen != null}");
+                Console.WriteLine($"Nuevo ítem Estela generado en ({x}, {y}). Imagen cargada: {nuevoItem.Imagen != null}");
+            }
+
+             //Generación de celdas de combustible:
+            for (int i = 0; i < cantidadMaximaDeCeldasCombustible; i++)
+            {
+                int x;
+                int y;
+
+                do
+                {
+                    x = random.Next(0, Filas);
+                    y = random.Next(0,Columnas);
+
+                } while (Nodos[x,y].EstaOcupado);
+
+                ItemCombustible nuevoItem = new ItemCombustible(Nodos[x,y]);
+                ItemsEnMalla.Add(nuevoItem);
+                Nodos[x,y].EstaOcupado = true;
+
+                Console.WriteLine($"Nuevo ítem Combustible generado en ({x}, {y}). Imagen cargada: {nuevoItem.Imagen != null}");
+            }
         }
     }
 }

@@ -6,7 +6,7 @@ namespace Modelos
     public class MotoJugador : Moto //Clase que hereda todas las características de la clase padre, Moto
     {//Se decidió hacer así para pdoer crear tanto los bots como la moto del jugador con las mismas caracteristicas de la moto, pero con 
     //ligeros cambios individuales en ellos.
-        public MotoJugador(Nodo posicionInicial, Malla malla,int longitudInicialEstela = 8) : base(posicionInicial, malla,longitudInicialEstela) //Con :base, estamos llamando al constructor de la clase padre.
+        public MotoJugador(Nodo posicionInicial, Malla malla,int longitudInicialEstela = 20) : base(posicionInicial, malla,longitudInicialEstela) //Con :base, estamos llamando al constructor de la clase padre.
         {
             //No se inicializan atributos, pues la clase padre ya lo hace desde que se crea una instancia de MotoJugador
         }

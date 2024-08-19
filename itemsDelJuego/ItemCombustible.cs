@@ -17,7 +17,7 @@ namespace itemsDelJuego
             
             if (ImagenCombustible == null)
             {
-                string rutaImagen = @"C:\Users\Anthony\OneDrive - Estudiantes ITCR\TEC\2024\Segundo semestre\Algoritmos y Estructuras de Datos 1\Proyectos\Proyecto 1 Tron\Desarrollo del proyecto\TronGame\Asets\CombustibleDef.PNG";
+                string rutaImagen = @"C:\Users\Anthony\OneDrive - Estudiantes ITCR\TEC\2024\Segundo semestre\Algoritmos y Estructuras de Datos 1\Proyectos\Proyecto 1 Tron\Desarrollo del proyecto\TronGame\Asets\PROBAR.png";
                 CargarImagen(rutaImagen);
                 ImagenCombustible = Imagen;
             }

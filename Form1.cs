@@ -45,17 +45,14 @@ namespace TronGame
 
             //Timer para refrescar la llamada al método de mover las motos automáticamente cuando no se preciona nada:
             clockTimer = new System.Windows.Forms.Timer();
-            clockTimer.Interval = 100; // 
+            clockTimer.Interval = 50; // 
             clockTimer.Tick += new EventHandler(ClockTimer_Tick);
             clockTimer.Tick += (s, e) => UpdateFuelBar(); //Actualizar la barra de combustible
             clockTimer.Tick += GenerarItem;
 
             // Generar algunos ítems iniciales
             malla.GenerarItemAleatorio();
-            
-            
 
-            
             this.KeyDown += new KeyEventHandler((sender,e) =>teclasPresionadas.MoverMoto(e)); //Enviamos los eventos registrados como evento tipo KeyDowm
             this.Paint += new PaintEventHandler(DibujarMalla);//Luiego dibujamos todos los componentes.
 
@@ -183,24 +180,11 @@ namespace TronGame
                     var NodoEstelaBotADibujar = bot.headEstela;
                     while (NodoEstelaBotADibujar != null)
                     {
-                        if (NodoEstelaBotADibujar.Posicion != null)
-                        {
-                            g.FillRectangle(botEstelaBrush, 
-                                NodoEstelaBotADibujar.Posicion.Y * anchoCelda, 
-                                NodoEstelaBotADibujar.Posicion.X * altoCelda, 
-                                anchoCelda, altoCelda);
-                        }
+                        g.FillRectangle(botEstelaBrush, NodoEstelaBotADibujar.Posicion.Y * anchoCelda, NodoEstelaBotADibujar.Posicion.X * altoCelda, anchoCelda, altoCelda);
                         NodoEstelaBotADibujar = NodoEstelaBotADibujar.Siguiente;
                     }
 
-                    // Dibujar la cabeza del bot después
-                    if (bot.PosicionActual != null)
-                    {
-                        g.FillRectangle(botHeadBrush, 
-                            bot.PosicionActual.Y * anchoCelda, 
-                            bot.PosicionActual.X * altoCelda, 
-                            anchoCelda, altoCelda);
-                    }
+                    g.FillRectangle(botHeadBrush, bot.PosicionActual.Y * anchoCelda, bot.PosicionActual.X * altoCelda, anchoCelda, altoCelda);
                 }
             }
 
@@ -211,16 +195,23 @@ namespace TronGame
                 {
                     if (item is ItemAumentarEstela aumentarEstela)
                     {
-                        Console.WriteLine($"Dibujando ítem en ({aumentarEstela.PosicionEnMalla.X}, {aumentarEstela.PosicionEnMalla.Y})");
-                        Console.WriteLine($"Estado de la imagen: {(aumentarEstela.Imagen != null ? "Presente" : "Ausente")}");
-
                         if (aumentarEstela.Imagen != null)
                         {
                             g.DrawImage(aumentarEstela.Imagen, 
                                 aumentarEstela.PosicionEnMalla.Y * anchoCelda, 
                                 aumentarEstela.PosicionEnMalla.X * altoCelda, 
                                 anchoCelda, altoCelda);
-                            Console.WriteLine("Imagen dibujada");
+                        }
+                    }
+
+                    if (item is ItemCombustible combustible)
+                    {
+                        if (combustible.Imagen != null)
+                        {
+                            g.DrawImage(combustible.Imagen, 
+                                combustible.PosicionEnMalla.Y * anchoCelda, 
+                                combustible.PosicionEnMalla.X * altoCelda, 
+                                anchoCelda, altoCelda);
                         }
                     }
                 }
@@ -239,7 +230,7 @@ namespace TronGame
                     {
                         
                         Color ColorEstela = coloresDisponibles[ i % coloresDisponibles.Count];//Asignación de un color de estela distinto para cada bot:
-                        int velocidadBots = random.Next( 1, 4 ); //Velocidad aleatoria para bots de forma aleatoria. funciona similar a la del jugador.
+                        int velocidadBots = random.Next( 1, 3 ); //Velocidad aleatoria para bots de forma aleatoria. funciona similar a la del jugador.
 
                         Bots nuevoBot = new Bots(posicionInicial,malla,ColorEstela,velocidadBots);
                         bots.Add(nuevoBot);
@@ -262,7 +253,7 @@ namespace TronGame
             {
                 malla.GenerarItemAleatorio();
             }
-            this.Invalidate();
+
         }
         private Nodo PosicionInicialAleatoriaBots() //Método encargado de dar lugares de spawn randoms para lso bots.
         {
