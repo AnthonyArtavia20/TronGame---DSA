@@ -9,10 +9,14 @@ namespace MallaGrid
             public Nodo? Abajo {get;set;}
             public Nodo? Izquierda {get;set;}
             public Nodo? Derecha {get;set;}
+
+            public bool EstaOcupado { get; set; }
+
             public Nodo(int x, int y) //Constructor(Inicializadador de los atributos)
             {
                 X = x;
                 Y = y;
+                EstaOcupado = false;
             }
         
         }

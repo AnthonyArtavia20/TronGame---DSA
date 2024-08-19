@@ -1,5 +1,7 @@
 //cONTIENE ATRIBUTOS: Posición, velocidad, combustible... y métodos para el movimiento}
 using MallaGrid;
+using EstructurasDeDatos;
+using itemsDelJuego;
 
 namespace Modelos
 {
@@ -22,6 +24,9 @@ namespace Modelos
         public bool estaEnMovimiento;
 
         public Malla malla; //Se crea una variable de tipo Malla(La clase) para luego hacer verificación de límites
+        private ItemsCola itemsCola = new ItemsCola();
+
+        
 
         //Creamos el constructor de la clase para poder otorgarle el valor x,y donde va a aparecer la moto, es decir el valor incial que se le 
         //va a pasar a esta clase para que inicialice la ubicación inicial ahí:
@@ -31,8 +36,8 @@ namespace Modelos
             PosicionActual = posicionInicial; //Posición actual de la moto "Donde aparece"
             this.malla = malla; //Para poder comparar los nodos de los bordes
             longitudEstela = longitudInicialEstela+1;
-            //Velocidad = 1; //Velocidad setteable
-            Velocidad = new Random().Next(1,3); //Velocidad entre 1 y 3
+            Velocidad = 1; //Velocidad setteable
+            //Velocidad = new Random().Next(1,3); //Velocidad entre 1 y 3
             Combustible = 100;// Tanque de combustible lleno
             estaEnMovimiento = true; // Inicialmente la moto está en movimiento
             InicializarEstaleMoto();
@@ -78,7 +83,6 @@ namespace Modelos
 
             PosicionActual = nuevaPosicion;//nuevaPosicion no es más que la posición a transladar indicadas por
             //las teclas del treclado, este argumento viene desde MoverArriba, MoverAbbajo, etc...
-
             /*
             A medida que la estela crece, significa que la moto avanza, por lo tanto su combustible debe
             disminuir. Actualmente será 5 unidades por cada celda de la malla*/
@@ -152,6 +156,11 @@ namespace Modelos
             return false;
         }
         
+        public void VerificarColisionConItems()
+        {
+            //Agregar lógicaa acá utilizaando el nodoEstaOcupado de la clase nodo
+        }
+
         public bool DentroDeLimites(Nodo posicion) //Este método tiene la función de devolver un valor booleano en función de lo que devuelva
         {//el método que compara los Nodos de los bordes
             return !malla.NodosDeLosBordes(posicion);
@@ -229,6 +238,28 @@ namespace Modelos
                 {
                     break;
                 }
+            }
+        }
+
+        public void AgregarItem(Items item)
+        {
+            var nodo = new NodoItemsCola {ItemAlamcenado = item.Nombre};
+            itemsCola.EnColar(nodo);
+        }
+
+        public void AplicarItems()
+        {
+            if (itemsCola.Inicio != null)
+            {
+                var item  = itemsCola.Inicio; //Item que está de primero en la cola.
+
+                /*
+                
+                IMPLEMENTAR LÓGICA PARA LOS ITEMS AQUJÍ-...-.-.--.--.---.-.-
+                
+                */
+
+                itemsCola.Desencolar();
             }
         }
     }

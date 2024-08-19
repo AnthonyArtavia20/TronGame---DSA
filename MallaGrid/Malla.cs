@@ -1,3 +1,5 @@
+using itemsDelJuego;
+
 namespace MallaGrid
 {
     public class Malla //Clase principal encarga de crear la matríz del campo de juego.
@@ -5,6 +7,9 @@ namespace MallaGrid
         public Nodo[,] Nodos {get; set;} //Creamos una lista multidimencional es decir una matriz 
         public int Filas {get; set;}
         public int Columnas {get; set;}
+        public List<Items> ItemsEnMalla { get; private set; }
+        private static Random random = new Random();
+
     
     
         public Malla(int filas, int columnas) //Constructor(Inicializadador de los atributos)
@@ -12,7 +17,7 @@ namespace MallaGrid
             Filas = filas;
             Columnas = columnas;
             Nodos = new Nodo[filas,columnas]; //Creamos un nuevo objeto de la matriz multidimencional y se le da las proporciones de las filas y columnas, es decir del tamaño de la ventana del forms
-    
+            ItemsEnMalla = new List<Items>();
             
         }
     
@@ -68,6 +73,32 @@ namespace MallaGrid
             Nota: Se decidió hacer esto así ya que verificando con cordenadas y cálculos ya que resultaba muy difícil
             detectar errores generados por esto*/
             return nodo.X == 0 || nodo.X == Filas-1 || nodo.Y == 0 ||nodo.Y == Columnas -1;
+        }
+
+        public void GenerarItemAleatorio()
+        {
+
+            int x, y;
+            int x2, y2;
+            do
+            {
+                x2 = random.Next(0, Filas);
+                y2 = random.Next(0, Columnas);
+
+                x = random.Next(0, Filas);
+                y = random.Next(0, Columnas);
+            } while (Nodos[x, y].EstaOcupado || Nodos[x2, y2].EstaOcupado );
+
+            ItemAumentarEstela nuevoItem = new ItemAumentarEstela(Nodos[x, y]);
+            ItemCombustible nuevoItemCombustible = new ItemCombustible(Nodos[x2,y2]);
+
+            ItemsEnMalla.Add(nuevoItem);
+            ItemsEnMalla.Add(nuevoItemCombustible);
+            Nodos[x, y].EstaOcupado = true;
+            Nodos[x2, y2].EstaOcupado = true;
+
+            Console.WriteLine($"Nuevo ítem Estela generado en ({x}, {y}). Imagen cargada: {nuevoItem.Imagen != null}");
+            Console.WriteLine($"Nuevo ítem Combustible generado en ({x2}, {y2}). Imagen cargada: {nuevoItemCombustible.Imagen != null}");
         }
     }
 }

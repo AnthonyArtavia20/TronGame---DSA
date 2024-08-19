@@ -1,6 +1,7 @@
 using Controladores;  // Para acceder a GameController, InputHandler, etc.
 using MallaGrid;  // Para acceder a Malla, Nodo.
 using Modelos;  // Para Estela, Items, Moto, etc.
+using itemsDelJuego;
 
 namespace TronGame
 {
@@ -46,13 +47,20 @@ namespace TronGame
             clockTimer = new System.Windows.Forms.Timer();
             clockTimer.Interval = 100; // 
             clockTimer.Tick += new EventHandler(ClockTimer_Tick);
-
-
             clockTimer.Tick += (s, e) => UpdateFuelBar(); //Actualizar la barra de combustible
-            clockTimer.Start(); //Inicia el timer del forms
+            clockTimer.Tick += GenerarItem;
+
+            // Generar algunos ítems iniciales
+            malla.GenerarItemAleatorio();
+            
+            
+
             
             this.KeyDown += new KeyEventHandler((sender,e) =>teclasPresionadas.MoverMoto(e)); //Enviamos los eventos registrados como evento tipo KeyDowm
             this.Paint += new PaintEventHandler(DibujarMalla);//Luiego dibujamos todos los componentes.
+
+            clockTimer.Start();
+
         }
 
         private void UpdateFuelBar()//Método para actualizar la barra de combustible
@@ -195,6 +203,28 @@ namespace TronGame
                     }
                 }
             }
+
+            // Dibujar los ítems
+            if (malla.ItemsEnMalla != null)
+            {
+                foreach (var item in malla.ItemsEnMalla)
+                {
+                    if (item is ItemAumentarEstela aumentarEstela)
+                    {
+                        Console.WriteLine($"Dibujando ítem en ({aumentarEstela.PosicionEnMalla.X}, {aumentarEstela.PosicionEnMalla.Y})");
+                        Console.WriteLine($"Estado de la imagen: {(aumentarEstela.Imagen != null ? "Presente" : "Ausente")}");
+
+                        if (aumentarEstela.Imagen != null)
+                        {
+                            g.DrawImage(aumentarEstela.Imagen, 
+                                aumentarEstela.PosicionEnMalla.Y * anchoCelda, 
+                                aumentarEstela.PosicionEnMalla.X * altoCelda, 
+                                anchoCelda, altoCelda);
+                            Console.WriteLine("Imagen dibujada");
+                        }
+                    }
+                }
+            }
         }
         private void InicializarBots()
         {   
@@ -226,6 +256,14 @@ namespace TronGame
             }
         }
 
+        private void GenerarItem(object sender, EventArgs e)
+        {
+            if (malla.ItemsEnMalla.Count < 5) // Limitar el número máximo de ítems en la malla
+            {
+                malla.GenerarItemAleatorio();
+            }
+            this.Invalidate();
+        }
         private Nodo PosicionInicialAleatoriaBots() //Método encargado de dar lugares de spawn randoms para lso bots.
         {
             int randomSpawn = random.Next(5); // Cambiado a 5 para incluir el caso default
