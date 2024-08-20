@@ -1,0 +1,28 @@
+C:\Users\Anthony\OneDrive - Estudiantes ITCR\TEC\2024\Segundo semestre\Algoritmos y Estructuras de Datos 1\Proyectos\Proyecto 1 Tron\Desarrollo del proyecto\TronGame\bin\Debug\net8.0-windows\TronGame.exe
+C:\Users\Anthony\OneDrive - Estudiantes ITCR\TEC\2024\Segundo semestre\Algoritmos y Estructuras de Datos 1\Proyectos\Proyecto 1 Tron\Desarrollo del proyecto\TronGame\bin\Debug\net8.0-windows\TronGame.deps.json
+C:\Users\Anthony\OneDrive - Estudiantes ITCR\TEC\2024\Segundo semestre\Algoritmos y Estructuras de Datos 1\Proyectos\Proyecto 1 Tron\Desarrollo del proyecto\TronGame\bin\Debug\net8.0-windows\TronGame.runtimeconfig.json
+C:\Users\Anthony\OneDrive - Estudiantes ITCR\TEC\2024\Segundo semestre\Algoritmos y Estructuras de Datos 1\Proyectos\Proyecto 1 Tron\Desarrollo del proyecto\TronGame\bin\Debug\net8.0-windows\TronGame.dll
+C:\Users\Anthony\OneDrive - Estudiantes ITCR\TEC\2024\Segundo semestre\Algoritmos y Estructuras de Datos 1\Proyectos\Proyecto 1 Tron\Desarrollo del proyecto\TronGame\bin\Debug\net8.0-windows\TronGame.pdb
+C:\Users\Anthony\OneDrive - Estudiantes ITCR\TEC\2024\Segundo semestre\Algoritmos y Estructuras de Datos 1\Proyectos\Proyecto 1 Tron\Desarrollo del proyecto\TronGame\obj\Debug\net8.0-windows\TronGame.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Anthony\OneDrive - Estudiantes ITCR\TEC\2024\Segundo semestre\Algoritmos y Estructuras de Datos 1\Proyectos\Proyecto 1 Tron\Desarrollo del proyecto\TronGame\obj\Debug\net8.0-windows\TronGame.AssemblyInfoInputs.cache
+C:\Users\Anthony\OneDrive - Estudiantes ITCR\TEC\2024\Segundo semestre\Algoritmos y Estructuras de Datos 1\Proyectos\Proyecto 1 Tron\Desarrollo del proyecto\TronGame\obj\Debug\net8.0-windows\TronGame.AssemblyInfo.cs
+C:\Users\Anthony\OneDrive - Estudiantes ITCR\TEC\2024\Segundo semestre\Algoritmos y Estructuras de Datos 1\Proyectos\Proyecto 1 Tron\Desarrollo del proyecto\TronGame\obj\Debug\net8.0-windows\TronGame.csproj.CoreCompileInputs.cache
+C:\Users\Anthony\OneDrive - Estudiantes ITCR\TEC\2024\Segundo semestre\Algoritmos y Estructuras de Datos 1\Proyectos\Proyecto 1 Tron\Desarrollo del proyecto\TronGame\obj\Debug\net8.0-windows\TronGame.dll
+C:\Users\Anthony\OneDrive - Estudiantes ITCR\TEC\2024\Segundo semestre\Algoritmos y Estructuras de Datos 1\Proyectos\Proyecto 1 Tron\Desarrollo del proyecto\TronGame\obj\Debug\net8.0-windows\refint\TronGame.dll
+C:\Users\Anthony\OneDrive - Estudiantes ITCR\TEC\2024\Segundo semestre\Algoritmos y Estructuras de Datos 1\Proyectos\Proyecto 1 Tron\Desarrollo del proyecto\TronGame\obj\Debug\net8.0-windows\TronGame.pdb
+C:\Users\Anthony\OneDrive - Estudiantes ITCR\TEC\2024\Segundo semestre\Algoritmos y Estructuras de Datos 1\Proyectos\Proyecto 1 Tron\Desarrollo del proyecto\TronGame\obj\Debug\net8.0-windows\TronGame.genruntimeconfig.cache
+C:\Users\Anthony\OneDrive - Estudiantes ITCR\TEC\2024\Segundo semestre\Algoritmos y Estructuras de Datos 1\Proyectos\Proyecto 1 Tron\Desarrollo del proyecto\TronGame\obj\Debug\net8.0-windows\ref\TronGame.dll
+C:\Users\Anthony\Desktop\TronGame\obj\Debug\net8.0-windows\TronGame.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Anthony\Desktop\TronGame\obj\Debug\net8.0-windows\TronGame.dll
+C:\Users\Anthony\Desktop\TronGame\obj\Debug\net8.0-windows\refint\TronGame.dll
+C:\Users\Anthony\Desktop\TronGame\obj\Debug\net8.0-windows\TronGame.pdb
+C:\Users\Anthony\Desktop\TronGame\bin\Debug\net8.0-windows\TronGame.exe
+C:\Users\Anthony\Desktop\TronGame\bin\Debug\net8.0-windows\TronGame.deps.json
+C:\Users\Anthony\Desktop\TronGame\bin\Debug\net8.0-windows\TronGame.runtimeconfig.json
+C:\Users\Anthony\Desktop\TronGame\bin\Debug\net8.0-windows\TronGame.dll
+C:\Users\Anthony\Desktop\TronGame\bin\Debug\net8.0-windows\TronGame.pdb
+C:\Users\Anthony\Desktop\TronGame\obj\Debug\net8.0-windows\TronGame.AssemblyInfoInputs.cache
+C:\Users\Anthony\Desktop\TronGame\obj\Debug\net8.0-windows\TronGame.AssemblyInfo.cs
+C:\Users\Anthony\Desktop\TronGame\obj\Debug\net8.0-windows\TronGame.csproj.CoreCompileInputs.cache
+C:\Users\Anthony\Desktop\TronGame\obj\Debug\net8.0-windows\TronGame.genruntimeconfig.cache
+C:\Users\Anthony\Desktop\TronGame\obj\Debug\net8.0-windows\ref\TronGame.dll
