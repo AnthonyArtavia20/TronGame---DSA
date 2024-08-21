@@ -1,5 +1,7 @@
 using Controladores;
 using MallaGrid;
+using itemsDelJuego;
+using System.Diagnostics;
 
 namespace Modelos
 {
@@ -42,6 +44,19 @@ namespace Modelos
                 return true;
             }
             return false;
+        }
+
+        public override void AplicarEfectoDelItem(Items item)//Aquí se le hace override.
+        {
+            switch (item)
+            {
+                case ItemBomba bomba://Caso específico para el jugador.
+                    DetenerMoto();
+                    bomba.Explotar();
+                    Environment.Exit(0);
+                    break;
+
+            }
         }
     }
 }

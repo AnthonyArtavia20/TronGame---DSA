@@ -267,7 +267,7 @@ namespace Modelos
             }
         }
 
-        private void AplicarEfectoDelItem(Items item)
+        public virtual void AplicarEfectoDelItem(Items item)//Se vuelve virtual para poder aplicar polimorfismo
         {
             switch (item)
             {
@@ -278,9 +278,11 @@ namespace Modelos
                     Combustible += combustible.AplicarEfecto(); // Aumentar el combustible
                     break;
                 case ItemBomba bomba:
+                /*Este caso es estríctamente para los bootsm ya que si se pone bomba.explotar()
+                aquí, provocará que cada vez que los bots colicionen con una bomba, muestre el mensaje de la función
+                entonces es por esto que se decidió crear un método poliformizada que permite modificar este caso
+                -ver esta misma función en Moto.Jugador.cs*/
                     DetenerMoto();
-                    bomba.Explotar();
-                    Environment.Exit(0);
                     break;
 
             }
