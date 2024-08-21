@@ -79,6 +79,7 @@ namespace MallaGrid
         {
             int cantidadMaximaDeAumentosEstela = 10;
             int cantidadMaximaDeCeldasCombustible = 20;
+            int cantidadMaximaDeBombas = 5;
 
             //Generación de aumentos de estela:
             for (int i = 0; i < cantidadMaximaDeAumentosEstela; i++)
@@ -112,6 +113,24 @@ namespace MallaGrid
                 } while (Nodos[x,y].EstaOcupado);
 
                 ItemCombustible nuevoItem = new ItemCombustible(Nodos[x,y]);
+                ItemsEnMalla.Add(nuevoItem);
+                Nodos[x,y].EstaOcupado = true;
+            }
+
+            //Generación de celdas de bombas:
+            for (int i = 0; i < cantidadMaximaDeBombas; i++)
+            {
+                int x;
+                int y;
+
+                do
+                {
+                    x = random.Next(0, Filas);
+                    y = random.Next(0,Columnas);
+
+                } while (Nodos[x,y].EstaOcupado);
+
+                ItemBomba nuevoItem = new ItemBomba(Nodos[x,y]);
                 ItemsEnMalla.Add(nuevoItem);
                 Nodos[x,y].EstaOcupado = true;
             }

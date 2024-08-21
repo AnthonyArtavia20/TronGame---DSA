@@ -2,6 +2,7 @@
 using MallaGrid;
 using EstructurasDeDatos;
 using itemsDelJuego;
+using Microsoft.VisualBasic.Devices;
 
 namespace Modelos
 {
@@ -274,10 +275,15 @@ namespace Modelos
                 case ItemAumentarEstela aumentoEstela:
                     longitudEstela += aumentoEstela.incrementoEstela; // Aumentar la longitud de la estela
                     break;
-
                 case ItemCombustible combustible:
                     Combustible += combustible.AplicarEfecto(); // Aumentar el combustible
                     break;
+                case ItemBomba bomba:
+                    DetenerMoto();
+                    bomba.Explotar();
+                    Environment.Exit(0);
+                    break;
+
             }
         }
     }

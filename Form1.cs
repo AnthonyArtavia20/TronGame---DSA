@@ -45,7 +45,7 @@ namespace TronGame
 
             //Timer para refrescar la llamada al método de mover las motos automáticamente cuando no se preciona nada:
             clockTimer = new System.Windows.Forms.Timer();
-            clockTimer.Interval = 50; // 
+            clockTimer.Interval = 100; // 
             clockTimer.Tick += new EventHandler(ClockTimer_Tick);
             clockTimer.Tick += (s, e) => UpdateFuelBar(); //Actualizar la barra de combustible
             clockTimer.Tick += GenerarItem;
@@ -214,6 +214,17 @@ namespace TronGame
                                 anchoCelda, altoCelda);
                         }
                     }
+
+                    if (item is ItemBomba bomba)
+                    {
+                        if (bomba.Imagen != null)
+                        {
+                            g.DrawImage(bomba.Imagen, 
+                                bomba.PosicionEnMalla.Y * anchoCelda, 
+                                bomba.PosicionEnMalla.X * altoCelda, 
+                                anchoCelda, altoCelda);
+                        }
+                    }
                 }
             }
         }
@@ -249,7 +260,7 @@ namespace TronGame
 
         private void GenerarItem(object sender, EventArgs e)
         {
-            if (malla.ItemsEnMalla.Count < 5) // Limitar el número máximo de ítems en la malla
+            if (malla.ItemsEnMalla.Count < 15) // Limitar el número máximo de ítems en la malla
             {
                 malla.GenerarItemAleatorio();
             }

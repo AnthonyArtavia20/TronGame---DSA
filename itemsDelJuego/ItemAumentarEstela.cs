@@ -1,5 +1,4 @@
 using MallaGrid;
-using Modelos;
 
 namespace itemsDelJuego
 {
@@ -21,11 +20,6 @@ namespace itemsDelJuego
                 CargarImagen(rutaImagen);
                 imagenAumentarEstela = Imagen; // Almacenar la imagen cargada
             }
-            else
-            {
-                Imagen = imagenAumentarEstela; // Usar la imagen ya cargada
-            }
         }
-
     }
 }

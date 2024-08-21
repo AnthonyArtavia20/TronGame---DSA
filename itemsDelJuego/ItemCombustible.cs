@@ -1,5 +1,4 @@
 using MallaGrid;
-using Modelos;
 
 namespace itemsDelJuego
 {
