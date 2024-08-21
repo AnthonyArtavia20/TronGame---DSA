@@ -10,6 +10,11 @@ namespace MallaGrid
         public List<Items> ItemsEnMalla { get; private set; }
         private static Random random = new Random();
 
+        private bool posicionLibre; //Esto se implementó como una forma de checkear si un espacio de los nodos está 
+        //o no ocupado antes de generar un objeto en el campo de juego, ya que existía el caso en el que
+        // sin desearlo, cuando se ejecutaba el juego, este se cerraba por una colisión con una bomba que enrealidad
+        //nunca estuvo ahí, se generaba en un lugar donde ya había otro objetos.
+
     
     
         public Malla(int filas, int columnas) //Constructor(Inicializadador de los atributos)
@@ -127,6 +132,17 @@ namespace MallaGrid
                 {
                     x = random.Next(0, Filas);
                     y = random.Next(0,Columnas);
+                    posicionLibre = true; 
+
+                    // Verificar si la posición está libre
+                    for (int j = 0; j < ItemsEnMalla.Count; j++)
+                    {
+                        if (ItemsEnMalla[j].PosicionEnMalla.X == x && ItemsEnMalla[j].PosicionEnMalla.Y == y)
+                        {
+                            posicionLibre = false;
+                            break;
+                        }
+                    }
 
                 } while (Nodos[x,y].EstaOcupado);
 
