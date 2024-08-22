@@ -3,6 +3,7 @@ using MallaGrid;
 using EstructurasDeDatos;
 using itemsDelJuego;
 
+
 namespace Modelos
 {
     public class Moto //Clase principal, Moto
@@ -267,7 +268,7 @@ namespace Modelos
             }
         }
 
-        public virtual void AplicarEfectoDelItem(Items item)//Se vuelve virtual para poder aplicar polimorfismo
+        private void AplicarEfectoDelItem(Items item)//Se vuelve virtual para poder aplicar polimorfismo
         {
             switch (item)
             {
@@ -278,11 +279,16 @@ namespace Modelos
                     Combustible += combustible.AplicarEfecto(); // Aumentar el combustible
                     break;
                 case ItemBomba bomba:
-                /*Este caso es estríctamente para los bootsm ya que si se pone bomba.explotar()
-                aquí, provocará que cada vez que los bots colicionen con una bomba, muestre el mensaje de la función
-                entonces es por esto que se decidió crear un método poliformizada que permite modificar este caso
-                -ver esta misma función en Moto.Jugador.cs*/
-                    DetenerMoto();
+                    if (this is MotoJugador) // Verifica si es el jugador porque anteriormente esto dió un reguero de bugs
+                    {
+                        DetenerMoto();
+                        MessageBox.Show("¡Perdiste por una bomba!"); // Muestra el mensaje de que perdió
+                        Environment.Exit(0);
+                    }
+                    else
+                    {
+                        DetenerMoto(); // Detiene el movimiento de los bots
+                    }
                     break;
 
             }

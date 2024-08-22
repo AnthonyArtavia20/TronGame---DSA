@@ -10,7 +10,7 @@ namespace EstructurasDeDatos
 
         public void EnColar(NodoItemsCola item) //Agregar al final, funciona como una lista enlazada
         {
-            if (_inicio == null)
+            if (_inicio == null) 
             {
                 _inicio = item;
             }

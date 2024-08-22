@@ -13,7 +13,7 @@ namespace MallaGrid
         private bool posicionLibre; //Esto se implementó como una forma de checkear si un espacio de los nodos está 
         //o no ocupado antes de generar un objeto en el campo de juego, ya que existía el caso en el que
         // sin desearlo, cuando se ejecutaba el juego, este se cerraba por una colisión con una bomba que enrealidad
-        //nunca estuvo ahí, se generaba en un lugar donde ya había otro objetos.
+        //nunca estuvo ahí, se generaba en un lugar donde ya había otro
 
     
     
@@ -83,7 +83,7 @@ namespace MallaGrid
         public void GenerarItemAleatorio()
         {
             int cantidadMaximaDeAumentosEstela = 10;
-            int cantidadMaximaDeCeldasCombustible = 20;
+            int cantidadMaximaDeCeldasCombustible = 10;
             int cantidadMaximaDeBombas = 5;
 
             //Generación de aumentos de estela:
@@ -131,24 +131,13 @@ namespace MallaGrid
                 do
                 {
                     x = random.Next(0, Filas);
-                    y = random.Next(0,Columnas);
-                    posicionLibre = true; 
+                    y = random.Next(0, Columnas);
 
-                    // Verificar si la posición está libre
-                    for (int j = 0; j < ItemsEnMalla.Count; j++)
-                    {
-                        if (ItemsEnMalla[j].PosicionEnMalla.X == x && ItemsEnMalla[j].PosicionEnMalla.Y == y)
-                        {
-                            posicionLibre = false;
-                            break;
-                        }
-                    }
+                } while (Nodos[x, y].EstaOcupado);
 
-                } while (Nodos[x,y].EstaOcupado);
-
-                ItemBomba nuevoItem = new ItemBomba(Nodos[x,y]);
+                ItemBomba nuevoItem = new ItemBomba(Nodos[x, y]);
                 ItemsEnMalla.Add(nuevoItem);
-                Nodos[x,y].EstaOcupado = true;
+                Nodos[x, y].EstaOcupado = true;
             }
         }
     }

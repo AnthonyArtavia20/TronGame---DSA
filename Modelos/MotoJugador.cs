@@ -45,18 +45,5 @@ namespace Modelos
             }
             return false;
         }
-
-        public override void AplicarEfectoDelItem(Items item)//Aquí se le hace override.
-        {
-            switch (item)
-            {
-                case ItemBomba bomba://Caso específico para el jugador.
-                    DetenerMoto();
-                    bomba.Explotar();
-                    Environment.Exit(0);
-                    break;
-
-            }
-        }
     }
 }

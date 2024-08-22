@@ -48,7 +48,7 @@ namespace TronGame
             clockTimer.Interval = 100; // 
             clockTimer.Tick += new EventHandler(ClockTimer_Tick);
             clockTimer.Tick += (s, e) => UpdateFuelBar(); //Actualizar la barra de combustible
-            clockTimer.Tick += GenerarItem;
+            GenerarItem();
 
             // Generar algunos ítems iniciales
             malla.GenerarItemAleatorio();
@@ -258,9 +258,9 @@ namespace TronGame
             }
         }
 
-        private void GenerarItem(object sender, EventArgs e)
+        private void GenerarItem()
         {
-            if (malla.ItemsEnMalla.Count < 15) // Limitar el número máximo de ítems en la malla
+            if (malla.ItemsEnMalla.Count < 25) // Limitar el número máximo de ítems en la malla
             {
                 malla.GenerarItemAleatorio();
             }

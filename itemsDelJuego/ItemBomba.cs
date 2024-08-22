@@ -4,20 +4,16 @@ namespace itemsDelJuego
 {
     public class ItemBomba : Items
     {
-        
+        public int incrementoEstela;
+        private static Random random = new Random();
+
         public ItemBomba(Nodo posicion)
         {
-            Nombre = "Item Bomba";
+            incrementoEstela = random.Next(1, 6);
             PosicionEnMalla = posicion;
-            {
-                string rutaImagen = @"C:\Users\Anthony\OneDrive - Estudiantes ITCR\TEC\2024\Segundo semestre\Algoritmos y Estructuras de Datos 1\Proyectos\Proyecto 1 Tron\Desarrollo del proyecto\TronGame\Asets\Items\BombaFinal.jpg";
-                CargarImagen(rutaImagen);
-            }
-        }
 
-        public void Explotar()
-        {   
-            MessageBox.Show("¡Oh no! Has muerto por una bomba.");
+            // Cargar la imagen usando el nombre del archivo
+            CargarImagen("BombaFinal.jpg");
         }
     }
 }
