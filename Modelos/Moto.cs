@@ -23,6 +23,7 @@ namespace Modelos
         public int Velocidad {get;private set;}
         public int Combustible {get;private set;}
         public bool estaEnMovimiento;
+        protected Random random;
 
         public Malla malla; //Se crea una variable de tipo Malla(La clase) para luego hacer verificación de límites
         private ItemsCola itemsCola = new ItemsCola();
@@ -34,11 +35,12 @@ namespace Modelos
 
         public Moto(Nodo posicionInicial,Malla malla,int longitudInicialEstela = 3) //Constructor para la moto
         {
+            random = new Random();
             PosicionActual = posicionInicial; //Posición actual de la moto "Donde aparece"
             this.malla = malla; //Para poder comparar los nodos de los bordes
             longitudEstela = longitudInicialEstela+1;
             Velocidad = 1; //Velocidad setteable
-            //Velocidad = new Random().Next(1,3); //Velocidad entre 1 y 3
+            //Velocidad = random.Next(1,3); //Velocidad entre 1 y 3
             Combustible = 100;// Tanque de combustible lleno
             estaEnMovimiento = true; // Inicialmente la moto está en movimiento
             InicializarEstaleMoto();
@@ -99,7 +101,6 @@ namespace Modelos
                 DetenerMoto();
                 return;
             }
-            Combustible -= Math.Max(1, Velocidad / 5);
             Combustible -= Math.Max(1, Velocidad / 5);
         }
 
@@ -238,7 +239,7 @@ namespace Modelos
             }
         }
 
-        //Mpetodo para poder detectar colisiones con los items en la malla:
+        //Método para poder detectar colisiones con los items en la malla:
         public void VerificarColisionConItems()
         {
             foreach (var item in malla.ItemsEnMalla)
@@ -255,7 +256,7 @@ namespace Modelos
             }
         }
 
-        private void ProcesarColaDeItems()
+        private async void ProcesarColaDeItems()
         {
             while (itemsCola.Inicio != null)
             {
@@ -265,6 +266,8 @@ namespace Modelos
                     AplicarEfectoDelItem(item);
                 }
                 itemsCola.Desencolar();
+
+                await Task.Delay(1000);
             }
         }
 

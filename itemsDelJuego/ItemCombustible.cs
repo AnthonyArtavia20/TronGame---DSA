@@ -6,13 +6,10 @@ namespace itemsDelJuego
     {
         private int CantidadDeCombustible;
         private static Random random = new Random();
-        
-
         public ItemCombustible(Nodo posicion)
         {
             CantidadDeCombustible = random.Next(20, 100);
             PosicionEnMalla = posicion;
-
             // Cargar la imagen usando el nombre del archivo
             CargarImagen("Combustible.png");
         }

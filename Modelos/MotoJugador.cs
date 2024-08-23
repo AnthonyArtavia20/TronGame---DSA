@@ -1,7 +1,5 @@
 using Controladores;
 using MallaGrid;
-using itemsDelJuego;
-using System.Diagnostics;
 
 namespace Modelos
 {

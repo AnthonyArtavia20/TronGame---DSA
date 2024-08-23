@@ -24,7 +24,7 @@ namespace EstructurasDeDatos
 
         private NodoItemsCola BuscarUltimo(NodoItemsCola unNodo)
         {//Buscamos recursivamente el último nodo.
-
+            //Este método es algo extra que implementé por experimentar, pero se puede usar en alguna implementación.
             if (unNodo.Siguiente == null)
             {
                 return unNodo;
@@ -35,10 +35,12 @@ namespace EstructurasDeDatos
             }
         }
 
-        public void Desencolar()
+        public NodoItemsCola Desencolar()
         {
             _inicio = _inicio.Siguiente; //Sirve para eliminar un elemento de la cola, elimina su referencia igualandolo al siguiente.
             //Ejemplo: A -> B -> C ---> b -> C
+
+            return _inicio;
         }
 
         public NodoItemsCola? Inicio //Nos permite devolver el valor de _inicio como un apropiedad de "Solo lectura" y que además no sea 

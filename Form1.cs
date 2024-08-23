@@ -1,7 +1,7 @@
-using Controladores;  // Para acceder a GameController, InputHandler, etc.
+using Controladores;  // Para acceder a BotsControllers, Teclas presionadas, etc.
 using MallaGrid;  // Para acceder a Malla, Nodo.
-using Modelos;  // Para Estela, Items, Moto, etc.
-using itemsDelJuego;
+using Modelos;  // Para Estela, Moto, etc.
+using itemsDelJuego; //Para poder acceder a los Items
 
 namespace TronGame
 {
@@ -12,12 +12,12 @@ namespace TronGame
         private Malla malla;
         private Moto moto;
         private TeclasPresionadas teclasPresionadas;
-        private MotoJugador motoJugador;
+        private MotoJugador motoJugador; //Dato tipo motoJugador.
         public List<Bots> bots = new List<Bots>(); //Lista de bots
         private Random random = new Random(); //Utilizado para poder escoger una ubicación de spawm aleatoria de los bots-
-
-        //Esto inicializa la entrada del Form cuando se le da dotnet run.
         private System.Windows.Forms.Timer clockTimer;
+        private int contadorTicks = 0; //Para poder controlar la generación de items en el juego.
+
 
         //-------------------------------Atributos(End)----------------------------------------
 
@@ -48,10 +48,11 @@ namespace TronGame
             clockTimer.Interval = 100; // 
             clockTimer.Tick += new EventHandler(ClockTimer_Tick);
             clockTimer.Tick += (s, e) => UpdateFuelBar(); //Actualizar la barra de combustible
-            GenerarItem();
 
-            // Generar algunos ítems iniciales
-            malla.GenerarItemAleatorio();
+            for (int i = 0; i < 10; i++) // Genera 10 ítems al inicio
+            {
+                malla.GenerarItemAleatorio();
+            }
 
             this.KeyDown += new KeyEventHandler((sender,e) =>teclasPresionadas.MoverMoto(e)); //Enviamos los eventos registrados como evento tipo KeyDowm
             this.Paint += new PaintEventHandler(DibujarMalla);//Luiego dibujamos todos los componentes.
@@ -88,7 +89,6 @@ namespace TronGame
                 return;
             }
 
-
             if (motoJugador.VerificarCombustible())
             {
                 clockTimer.Stop();
@@ -100,23 +100,30 @@ namespace TronGame
             List<Bots> botsParaEliminar = new List<Bots>(); //Esta lista sirve para  almacenar los bots que han chocado con alguna estela
             //para posterior eliminarlos de la lista.
         
-            foreach (var bot in bots) //Se itera sonre la lista principal de bots
+            foreach (var bot in bots) //Se itera sobre la lista principal de bots
             {
                 bot.MoverAleatoriamenteBots(bots, motoJugador);//Se ingresa la lista y la instancia de la moto del jugador para luego,
                 //si un bot no está en movimiento, se agrega a la lista de eliminación.
                 if (!bot.estaEnMovimiento)
                 {
-                    botsParaEliminar.Add(bot);//Aquí
+                    botsParaEliminar.Add(bot);//Aquí se agrega el bot colisionado(se puso en false el movimiento) en una lista, para luego eliminarlos.
                 }
             }
         
-            // Eliminar los bots que chocaron
+            // Eliminar los bots que chocaron, eliminandolos de la nueva lista creada solo para almacenarlos.
             foreach (var bot in botsParaEliminar)
             {
                 bots.Remove(bot);
             }
-        
-            this.Invalidate();//Refrescar el dibujado de objetos por pantalla para notar los cambios.
+
+            contadorTicks++;
+            if (contadorTicks >= 5) // Genera un nuevo ítem cada 10 ticks
+            {
+                malla.GenerarItemAleatorio();
+                contadorTicks = 0;
+            }
+
+            this.Invalidate(); // Redibujar la pantalla
         }
 
         //Método para poder dibujar la malla por pantalla, no dibuja la linkedList como tal, si no que dibuja lineas entre las filas y columnas, dando la ilusión de celdas.
@@ -258,14 +265,6 @@ namespace TronGame
             }
         }
 
-        private void GenerarItem()
-        {
-            if (malla.ItemsEnMalla.Count < 25) // Limitar el número máximo de ítems en la malla
-            {
-                malla.GenerarItemAleatorio();
-            }
-
-        }
         private Nodo PosicionInicialAleatoriaBots() //Método encargado de dar lugares de spawn randoms para lso bots.
         {
             int randomSpawn = random.Next(5); // Cambiado a 5 para incluir el caso default

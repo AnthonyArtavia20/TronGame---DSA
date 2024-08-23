@@ -80,65 +80,40 @@ namespace MallaGrid
             return nodo.X == 0 || nodo.X == Filas-1 || nodo.Y == 0 ||nodo.Y == Columnas -1;
         }
 
-        public void GenerarItemAleatorio()
-        {
-            int cantidadMaximaDeAumentosEstela = 10;
-            int cantidadMaximaDeCeldasCombustible = 10;
-            int cantidadMaximaDeBombas = 5;
+        public void GenerarItemAleatorio() //Se simplificó este método  con el fin de mejorar el rendimiento
+        {//anteriormente se hacía un bucle for por cada item a dibujar y esto generaba muchísimo lag.
 
-            //Generación de aumentos de estela:
-            for (int i = 0; i < cantidadMaximaDeAumentosEstela; i++)
+            if (ItemsEnMalla.Count >= 30)
             {
-                int x;
-                int y;
+                // Limitar el número máximo de ítems en la malla
+                return; //Ahora se controla la cantidad de elementos desde aquí.
+            } 
 
-                do
-                {
-                    x = random.Next(0, Filas);
-                    y = random.Next(0,Columnas);
+            int x, y; //Creadas para poder otorgar un lugar en la malla.
+            do
+            {
+                x = random.Next(0, Filas);
+                y = random.Next(0, Columnas);
+            } while (Nodos[x,y].EstaOcupado); //Mientras los nodos 
 
-                } while (Nodos[x,y].EstaOcupado);
+            Items nuevoItem; //Variable Tipo Items para almacenar los items
+            int tipoItem = random.Next(3); //Variable de tipo random
 
-                ItemAumentarEstela nuevoItem = new ItemAumentarEstela(Nodos[x,y]);
-                ItemsEnMalla.Add(nuevoItem);
-                Nodos[x,y].EstaOcupado = true;
+            switch (tipoItem)
+            {
+                case 0:
+                    nuevoItem = new ItemAumentarEstela(Nodos[x,y]);
+                    break;
+                case 1:
+                    nuevoItem = new ItemCombustible(Nodos[x,y]);
+                    break;
+                default:
+                    nuevoItem = new ItemBomba(Nodos[x,y]);
+                    break;
             }
 
-             //Generación de celdas de combustible:
-            for (int i = 0; i < cantidadMaximaDeCeldasCombustible; i++)
-            {
-                int x;
-                int y;
-
-                do
-                {
-                    x = random.Next(0, Filas);
-                    y = random.Next(0,Columnas);
-
-                } while (Nodos[x,y].EstaOcupado);
-
-                ItemCombustible nuevoItem = new ItemCombustible(Nodos[x,y]);
-                ItemsEnMalla.Add(nuevoItem);
-                Nodos[x,y].EstaOcupado = true;
-            }
-
-            //Generación de celdas de bombas:
-            for (int i = 0; i < cantidadMaximaDeBombas; i++)
-            {
-                int x;
-                int y;
-
-                do
-                {
-                    x = random.Next(0, Filas);
-                    y = random.Next(0, Columnas);
-
-                } while (Nodos[x, y].EstaOcupado);
-
-                ItemBomba nuevoItem = new ItemBomba(Nodos[x, y]);
-                ItemsEnMalla.Add(nuevoItem);
-                Nodos[x, y].EstaOcupado = true;
-            }
+            ItemsEnMalla.Add(nuevoItem); //Agregamos el item a la malla.
+            Nodos[x,y].EstaOcupado = true; //Ponemos ese nodo como ocupado.
         }
     }
 }
