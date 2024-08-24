@@ -35,7 +35,7 @@ namespace EstructurasDeDatos
             }
         }
 
-        public NodoItemsCola Desencolar()
+        public NodoItemsCola? Desencolar()
         {
             _inicio = _inicio.Siguiente; //Sirve para eliminar un elemento de la cola, elimina su referencia igualandolo al siguiente.
             //Ejemplo: A -> B -> C ---> b -> C

@@ -97,7 +97,7 @@ namespace Controladores
     
                 if (movimientoElegido != null) //Luego de haber seleccionado el movimiento a realizar, aquí se comprueba que no sea nulo,
                 {//esto con el fin de luego verificar si hay colisión con el nodo escogidp, si no la hay, entonces se mueve hacía el nodo escogido.
-                    if (jugadorReal.VerificarColision(movimientoElegido))
+                    if (!jugadorReal.PoderInvensivilidadActivado && jugadorReal.VerificarColision(movimientoElegido))
                     {
                         DetenerMoto();
                     }
@@ -112,12 +112,24 @@ namespace Controladores
 
         private bool EsNodoOcupadoPorBots(Nodo nodo, List<Bots> listaDeBotsDesdeForm1) //Utilizado para verificar si un nodo está ocupado por
         {//el jugador o un bot.
-            return VerificarColision(nodo) || VerificarColisionConOtrosBot(nodo, listaDeBotsDesdeForm1);
+            if (PoderInvensivilidadActivado)
+            {
+                return false;
+            }
+            else
+            {
+                return VerificarColision(nodo) || VerificarColisionConOtrosBot(nodo, listaDeBotsDesdeForm1);
+            }
         }
 
         private bool VerificarColisionConOtrosBot(Nodo nodo, List<Bots> listaDeBots)//Método utilizado para verificar la colisión con los bots
         {//se logra mediante la revisión en ciclo de la lista de bots, es decir, se itera constantemente con el fin de checkear si un bot cualquiera
         //de la lista, choca con la misma posición del actual.
+        
+            if (PoderInvensivilidadActivado)
+            {
+                return false;
+            }
             foreach (var otroBot in listaDeBots)
             {
                 if (otroBot != this && otroBot.VerificarColision(nodo))

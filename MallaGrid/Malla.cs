@@ -1,4 +1,5 @@
 using itemsDelJuego;
+using poderesDelJuego;
 
 namespace MallaGrid
 {
@@ -8,6 +9,7 @@ namespace MallaGrid
         public int Filas {get; set;}
         public int Columnas {get; set;}
         public List<Items> ItemsEnMalla { get; private set; }
+        public List<Poderes> PoderesEnMalla { get; private set; }
         private static Random random = new Random();
 
         private bool posicionLibre; //Esto se implementó como una forma de checkear si un espacio de los nodos está 
@@ -23,6 +25,7 @@ namespace MallaGrid
             Columnas = columnas;
             Nodos = new Nodo[filas,columnas]; //Creamos un nuevo objeto de la matriz multidimencional y se le da las proporciones de las filas y columnas, es decir del tamaño de la ventana del forms
             ItemsEnMalla = new List<Items>();
+            PoderesEnMalla = new List<Poderes>();
             
         }
     
@@ -80,25 +83,37 @@ namespace MallaGrid
             return nodo.X == 0 || nodo.X == Filas-1 || nodo.Y == 0 ||nodo.Y == Columnas -1;
         }
 
-        public void GenerarItemAleatorio() //Se simplificó este método  con el fin de mejorar el rendimiento
-        {//anteriormente se hacía un bucle for por cada item a dibujar y esto generaba muchísimo lag.
-
-            if (ItemsEnMalla.Count >= 30)
+        public void GenerarObjetoAleatorio()
+        {
+            int totalObjetosEnMalla = ItemsEnMalla.Count + PoderesEnMalla.Count;
+        
+            if (totalObjetosEnMalla >= 30) // Limitar el número máximo total de ítems y poderes en la malla
             {
-                // Limitar el número máximo de ítems en la malla
-                return; //Ahora se controla la cantidad de elementos desde aquí.
-            } 
-
-            int x, y; //Creadas para poder otorgar un lugar en la malla.
+                return;
+            }
+        
+            int x, y;
             do
             {
                 x = random.Next(0, Filas);
                 y = random.Next(0, Columnas);
-            } while (Nodos[x,y].EstaOcupado); //Mientras los nodos 
-
-            Items nuevoItem; //Variable Tipo Items para almacenar los items
-            int tipoItem = random.Next(3); //Variable de tipo random
-
+            } while (Nodos[x,y].EstaOcupado); // Mientras los nodos estén desocupados.
+        
+            if (totalObjetosEnMalla % 2 == 0)
+            {
+                GenerarItem(x, y);
+            }
+            else
+            {
+                GenerarPoder(x, y);
+            }
+        }
+        
+        private void GenerarItem(int x, int y)
+        {
+            Items nuevoItem;
+            int tipoItem = random.Next(3);
+        
             switch (tipoItem)
             {
                 case 0:
@@ -111,9 +126,30 @@ namespace MallaGrid
                     nuevoItem = new ItemBomba(Nodos[x,y]);
                     break;
             }
-
-            ItemsEnMalla.Add(nuevoItem); //Agregamos el item a la malla.
-            Nodos[x,y].EstaOcupado = true; //Ponemos ese nodo como ocupado.
+        
+            ItemsEnMalla.Add(nuevoItem);
+            Nodos[x,y].EstaOcupado = true;
         }
+        
+        private void GenerarPoder(int x, int y)
+        {
+            Poderes nuevoPoder;
+            int tipoPoder = random.Next(2);
+        
+            switch (tipoPoder)
+            {
+                case 0:
+                    nuevoPoder = new HiperVelocidad(Nodos[x,y]);
+                    break;
+                default:
+                    nuevoPoder = new Invensibilidad(Nodos[x,y]);
+                    break;
+            }
+        
+            PoderesEnMalla.Add(nuevoPoder);
+            Nodos[x,y].EstaOcupado = true;
+        }
+
+        
     }
 }

@@ -8,17 +8,16 @@ namespace Modelos
     //ligeros cambios individuales en ellos.
         public MotoJugador(Nodo posicionInicial, Malla malla,int longitudInicialEstela = 3) : base(posicionInicial, malla,longitudInicialEstela) //Con :base, estamos llamando al constructor de la clase padre.
         {
-            //No se inicializan atributos, pues la clase padre ya lo hace desde que se crea una instancia de MotoJugador
+            this.ColorEstela = Color.Blue;
         }
 
         public bool VerificarColisionConBots(List<Bots> bots) //Verificación de colisiones con bots.
         {
             foreach (var bot in bots) //Recibe la lista de bots en juego y la itera, en el momento que detecta
             {// una colisión con el jugador, entonces procede a deterner las motos y enseña un mensaje.
-                if (bot.VerificarColision(PosicionActual))
+                if (bot.VerificarColision(PosicionActual) && !PoderInvensivilidadActivado)
                 {
                     DetenerMoto();
-                    bot.DetenerMoto(); //Medio innceserario pues una vez se da la colisón, el juego se para(Esto se hace desde Form1.cs).
                     return true;
                 }
             }

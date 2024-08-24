@@ -6,9 +6,12 @@ namespace EstructurasDeDatos
     {
         private NodosPilaDePoderes? _tope;//_tope para indicar que es privado
 
-        public NodosPilaDePoderes? Tope()
+        public NodosPilaDePoderes? Tope
         {
-            return _tope;
+            get 
+            {
+                return _tope;
+            }
         }
 
         public void Apilar(NodosPilaDePoderes poder)
@@ -37,6 +40,22 @@ namespace EstructurasDeDatos
                 _tope = _tope.siguiente; //En tope va a quedar lo que hay en tope.siguiente.
                 //Haciendo que la referencia al elemento actual, se elimine.
             }
+        }
+
+        public void MoverTopeAlFondo()
+        {
+            if (_tope == null || _tope.siguiente == null) return;
+    
+            var topeActual = _tope;
+            _tope = _tope.siguiente;
+    
+            var ultimo = _tope;
+            while (ultimo.siguiente != null)
+            {
+                ultimo = ultimo.siguiente;
+            }
+            ultimo.siguiente = topeActual;
+            topeActual.siguiente = null;
         }
     }
 }

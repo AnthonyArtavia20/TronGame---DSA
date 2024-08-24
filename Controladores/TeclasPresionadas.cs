@@ -21,23 +21,31 @@ namespace Controladores
         {//se pueda alterar la dirección de desplazamiento.
             if (eventoARegistrar != null)
             {
-                if (eventoARegistrar.KeyCode == Keys.W) //Entonces si se registra un evento de tipo tecla precionada y se categoriza como tecla "W" entonces significa que es subir
-                {                                       //por lo tanto llamamos al método MoverArriba de la clase Moto.
+                switch (eventoARegistrar.KeyCode)
+            {
+                case Keys.W:
                     moto.MoverArriba();
                     ultimaTeclaPresionada = Keys.W;
-                } else if (eventoARegistrar.KeyCode == Keys.S)
-                {
+                    break;
+                case Keys.S:
                     moto.MoverAbajo();
                     ultimaTeclaPresionada = Keys.S;
-                } else if (eventoARegistrar.KeyCode == Keys.D) 
-                {
+                    break;
+                case Keys.D:
                     moto.MoverDerecha();
                     ultimaTeclaPresionada = Keys.D;
-                } else if (eventoARegistrar.KeyCode == Keys.A)
-                {
+                    break;
+                case Keys.A:
                     moto.MoverIzquierda();
                     ultimaTeclaPresionada = Keys.A;
-                }
+                    break;
+                case Keys.M: // Tecla para mover el tope de la pila al fondo
+                    moto.poderesPila.MoverTopeAlFondo();
+                    break;
+                case Keys.P: // Tecla para aplicar el poder del tope
+                    AplicarPoderDelTope();
+                    break;
+            }
                 
             }else 
                 {
@@ -65,6 +73,15 @@ namespace Controladores
             else if (ultimaTeclaPresionada == Keys.D)
             {
                 moto.MoverDerecha();
+            }
+        }
+        private void AplicarPoderDelTope()
+        {
+            if (moto.poderesPila.Tope != null)
+            {
+                var poderAplicar = moto.poderesPila.Tope.PoderAlmacenado;
+                moto.AplicarEfectoDelPoder(poderAplicar);
+                moto.poderesPila.Desapilar();
             }
         }
     }

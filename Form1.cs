@@ -1,7 +1,8 @@
 using Controladores;  // Para acceder a BotsControllers, Teclas presionadas, etc.
 using MallaGrid;  // Para acceder a Malla, Nodo.
 using Modelos;  // Para Estela, Moto, etc.
-using itemsDelJuego; //Para poder acceder a los Items
+using itemsDelJuego;
+using poderesDelJuego; //Para poder acceder a los Items
 
 namespace TronGame
 {
@@ -51,15 +52,40 @@ namespace TronGame
 
             for (int i = 0; i < 10; i++) // Genera 10 ítems al inicio
             {
-                malla.GenerarItemAleatorio();
+                malla.GenerarObjetoAleatorio();
             }
 
+            this.KeyPreview = true;
             this.KeyDown += new KeyEventHandler((sender,e) =>teclasPresionadas.MoverMoto(e)); //Enviamos los eventos registrados como evento tipo KeyDowm
             this.Paint += new PaintEventHandler(DibujarMalla);//Luiego dibujamos todos los componentes.
 
             clockTimer.Start();
-
         }
+
+        // Sobrescribe el método OnPaint para dibujar la pila de poderes
+
+    private void DibujarPilaDePoderes(Graphics g)
+    {
+        if (motoJugador.poderesPila.Tope == null) return; // No dibujar si la pila está vacía
+    
+        int y = 10;
+        int x = 1000;
+        int width = 150;
+        int height = 20;
+    
+        // Dibujar un fondo para la lista de poderes
+        g.FillRectangle(new SolidBrush(Color.FromArgb(128, 0, 0, 0)), x, y, width, height * 5);
+    
+        var nodoActual = motoJugador.poderesPila.Tope;
+        while (nodoActual != null)
+        {
+            string poderNombre = nodoActual.PoderAlmacenado.GetType().Name;
+            g.DrawString(poderNombre, this.Font, Brushes.Yellow, new Point(x + 5, y + 5));
+            y += height;
+            nodoActual = nodoActual.siguiente;
+        }
+    }
+
 
         private void UpdateFuelBar()//Método para actualizar la barra de combustible
         {
@@ -119,7 +145,7 @@ namespace TronGame
             contadorTicks++;
             if (contadorTicks >= 5) // Genera un nuevo ítem cada 10 ticks
             {
-                malla.GenerarItemAleatorio();
+                malla.GenerarObjetoAleatorio();
                 contadorTicks = 0;
             }
 
@@ -161,7 +187,7 @@ namespace TronGame
             if (moto != null) //Dibujar la Moto del jugador y su estela
             {
                 SolidBrush motoBrush = new SolidBrush(Color.Red);
-                SolidBrush estelaBrush = new SolidBrush(Color.Blue);
+                SolidBrush estelaBrush = new SolidBrush(moto.ColorEstela);
         
                 var NodoEstelaMotoADibujar = moto.headEstela;
                 while (NodoEstelaMotoADibujar != null)
@@ -172,6 +198,7 @@ namespace TronGame
         
                 g.FillRectangle(motoBrush, moto.PosicionActual.Y * anchoCelda, moto.PosicionActual.X * altoCelda, anchoCelda, altoCelda);
             }
+            DibujarPilaDePoderes(e.Graphics);
 
 
             //Dibujar bots -->
@@ -234,6 +261,34 @@ namespace TronGame
                     }
                 }
             }
+
+            if (malla.PoderesEnMalla != null)
+            {
+                foreach (var poder in malla.PoderesEnMalla)
+                {
+                    if (poder is HiperVelocidad velocidadAumentada)
+                    {
+                        if (velocidadAumentada.Imagen != null)
+                        {
+                            g.DrawImage(velocidadAumentada.Imagen, 
+                                velocidadAumentada.PosicionEnMalla.Y * anchoCelda, 
+                                velocidadAumentada.PosicionEnMalla.X * altoCelda, 
+                                anchoCelda, altoCelda);
+                        }
+                    }
+                    if (poder is Invensibilidad Invensibilidad)
+                    {
+                        if (Invensibilidad.Imagen != null)
+                        {
+                            g.DrawImage(Invensibilidad.Imagen, 
+                                Invensibilidad.PosicionEnMalla.Y * anchoCelda, 
+                                Invensibilidad.PosicionEnMalla.X * altoCelda, 
+                                anchoCelda, altoCelda);
+                        }
+                    }
+                }
+            }
+            
         }
         private void InicializarBots()
         {   
