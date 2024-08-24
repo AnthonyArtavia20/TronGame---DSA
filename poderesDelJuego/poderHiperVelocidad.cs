@@ -1,5 +1,6 @@
 using MallaGrid;
 using Modelos;
+using Controladores;
 
 namespace poderesDelJuego
 {
@@ -37,30 +38,47 @@ namespace poderesDelJuego
             moto.Velocidad *= 2; // O cualquier otra lógica para aumentar la velocidad
             int duracionHiperVelocidad = new Random().Next(3, 5) * 1000; // Duración en milisegundos
 
-            // Iniciar el temporizador para cambiar el color
-            colorTimer = new System.Timers.Timer(100); // Cambia el color cada 100 ms
-            colorTimer.Elapsed += (sender, e) => EfetoVisualDeLaMoto(moto);
-            colorTimer.Start();
+            if (moto is MotoJugador jugador)
+            {
+                // Iniciar el temporizador para cambiar el color
+                colorTimer = new System.Timers.Timer(100); // Cambia el color cada 100 ms
+                colorTimer.Elapsed += (sender, e) => EfetoVisualDeLaMoto(moto);
+                colorTimer.Start();
 
-            // Iniciar el temporizador para desactivar el poder
-            timer = new System.Timers.Timer(duracionHiperVelocidad);
-            timer.Elapsed += (sender, e) => DesactivarHiperVelocidad(moto);
-            timer.AutoReset = false; // Para que se ejecute solo una vez
-            timer.Start();
+                // Iniciar el temporizador para desactivar el poder
+                timer = new System.Timers.Timer(duracionHiperVelocidad);
+                timer.Elapsed += (sender, e) => DesactivarHiperVelocidad(moto);
+                timer.AutoReset = false; // Para que se ejecute solo una vez
+                timer.Start();
+            }
+            else if (moto is Bots bot)
+            {   
+                bot.IniciarEfectoVisualHiperVelocidad();
+            }
+
+            Task.Delay(duracionHiperVelocidad).ContinueWith(_ => DesactivarHiperVelocidad(moto));
         }
         
         // Método para desactivar el poder
         private void DesactivarHiperVelocidad(Moto moto)
         {
             moto.Velocidad /= 2; // Restablece la velocidad original
-            colorTimer?.Stop(); // Detener el temporizador de color
-            colorTimer?.Dispose();
+            
+            if (moto is MotoJugador jugador)
+            {
+                colorTimer?.Stop(); // Detener el temporizador de color
+                colorTimer?.Dispose();
 
-            // Restablecer el color de la estela al original
-            moto.ColorEstela = colorOriginal;
+                // Restablecer el color de la estela al original
+                moto.ColorEstela = colorOriginal;
 
-            timer?.Stop();
-            timer?.Dispose();
+                timer?.Stop();
+                timer?.Dispose();
+            }
+            else if (moto is Bots bot)
+            {
+                bot.DetenerEfectoVisualHiperVelocidad();
+            }
         }
 
         public void EfetoVisualDeLaMoto(Moto moto)

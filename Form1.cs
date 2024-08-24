@@ -79,6 +79,10 @@ namespace TronGame
         var nodoActual = motoJugador.poderesPila.Tope;
         while (nodoActual != null)
         {
+            if (nodoActual.PoderAlmacenado == null)
+            {
+                return; //Se agregó esto para evitar el aviso de que podía haber una referencia nula.
+            }
             string poderNombre = nodoActual.PoderAlmacenado.GetType().Name;
             g.DrawString(poderNombre, this.Font, Brushes.Yellow, new Point(x + 5, y + 5));
             y += height;
@@ -192,6 +196,10 @@ namespace TronGame
                 var NodoEstelaMotoADibujar = moto.headEstela;
                 while (NodoEstelaMotoADibujar != null)
                 {
+                    if (NodoEstelaMotoADibujar.Posicion == null)
+                        {
+                            return; //Se agregó esto para evitar el aviso de que podía haber una referencia nula.
+                        }
                     g.FillRectangle(estelaBrush, NodoEstelaMotoADibujar.Posicion.Y * anchoCelda, NodoEstelaMotoADibujar.Posicion.X * altoCelda, anchoCelda, altoCelda);
                     NodoEstelaMotoADibujar = NodoEstelaMotoADibujar.Siguiente;
                 }
@@ -214,6 +222,10 @@ namespace TronGame
                     var NodoEstelaBotADibujar = bot.headEstela;
                     while (NodoEstelaBotADibujar != null)
                     {
+                        if (NodoEstelaBotADibujar.Posicion == null)
+                        {
+                            return; //Se agregó esto para evitar el aviso de que podía haber una referencia nula.
+                        }
                         g.FillRectangle(botEstelaBrush, NodoEstelaBotADibujar.Posicion.Y * anchoCelda, NodoEstelaBotADibujar.Posicion.X * altoCelda, anchoCelda, altoCelda);
                         NodoEstelaBotADibujar = NodoEstelaBotADibujar.Siguiente;
                     }
@@ -229,6 +241,10 @@ namespace TronGame
                 {
                     if (item is ItemAumentarEstela aumentarEstela)
                     {
+                        if (aumentarEstela.PosicionEnMalla == null)
+                        {
+                            return;
+                        }
                         if (aumentarEstela.Imagen != null)
                         {
                             g.DrawImage(aumentarEstela.Imagen, 
@@ -240,6 +256,10 @@ namespace TronGame
 
                     if (item is ItemCombustible combustible)
                     {
+                        if (combustible.PosicionEnMalla == null)
+                        {
+                            return; //Se agregó esto para evitar que diera u aviso de que podía ser null
+                        }
                         if (combustible.Imagen != null)
                         {
                             g.DrawImage(combustible.Imagen, 
@@ -251,6 +271,10 @@ namespace TronGame
 
                     if (item is ItemBomba bomba)
                     {
+                        if (bomba.PosicionEnMalla == null)
+                        {
+                            return; //Se agregó esto para evitar que diera u aviso de que podía ser null
+                        }
                         if (bomba.Imagen != null)
                         {
                             g.DrawImage(bomba.Imagen, 
@@ -268,6 +292,10 @@ namespace TronGame
                 {
                     if (poder is HiperVelocidad velocidadAumentada)
                     {
+                        if (velocidadAumentada.PosicionEnMalla == null)
+                        {
+                            return; //Se agregó esto para evitar que diera u aviso de que podía ser null
+                        }
                         if (velocidadAumentada.Imagen != null)
                         {
                             g.DrawImage(velocidadAumentada.Imagen, 
@@ -278,6 +306,10 @@ namespace TronGame
                     }
                     if (poder is Invensibilidad Invensibilidad)
                     {
+                        if (Invensibilidad.PosicionEnMalla == null)
+                        {
+                            return; //Se agregó esto para evitar que diera u aviso de que podía ser null
+                        }
                         if (Invensibilidad.Imagen != null)
                         {
                             g.DrawImage(Invensibilidad.Imagen, 

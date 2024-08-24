@@ -127,6 +127,7 @@ namespace Modelos
 
         private void EliminarUtimoNodo()
         {
+
             if (headEstela == null || headEstela.Siguiente == null) //Si resulta que la cabeza de la estala
             {//es null, significa que no hay último elemento por eliminar.
                 headEstela = null;
@@ -135,7 +136,6 @@ namespace Modelos
 
             var nodoActual = headEstela; //Declaramos una variable que utilizo para identificar el elemento
             //actual o inicial para luego moverme por la linkedList hasta el elemento a eliminar.
-
             while (nodoActual.Siguiente.Siguiente != null) 
             {
                 /*Ejemplo de uso:
@@ -252,6 +252,10 @@ namespace Modelos
         {
             foreach (var item in malla.ItemsEnMalla)
             {
+                if (item.PosicionEnMalla == null)
+                {
+                    return;
+                }
                 if (PosicionActual.X == item.PosicionEnMalla.X && PosicionActual.Y == item.PosicionEnMalla.Y)
                 {
                     // Se ha detectado una colisión con un ítem
@@ -308,6 +312,10 @@ namespace Modelos
         {
             foreach (var poder in malla.PoderesEnMalla)
             {
+                if (poder.PosicionEnMalla == null)
+                    {
+                        return; //Se agregó esto para evitar una referencia nula.
+                    }
                 if (PosicionActual.X == poder.PosicionEnMalla.X && PosicionActual.Y == poder.PosicionEnMalla.Y)
                 {
                     //Se ha detectado una colisión con un poder
@@ -320,7 +328,7 @@ namespace Modelos
             }
         }
 
-        public void AplicarEfectoDelPoder(Poderes poder)
+        public virtual void AplicarEfectoDelPoder(Poderes poder)
         {
             switch(poder)
             {
