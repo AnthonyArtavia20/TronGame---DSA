@@ -9,11 +9,8 @@ namespace Controladores
     {
         private Random random = new Random(); //Generador Random
         private int direccionActual; //Almacén del valor de dirección.
-
         public Color ColorEstela {get; private set;} //Color de estela independiente que va a tener cada bot.
-
         public int VelocidadBots {get;private set;} //Atributo que se pasa desde el forms 1, es la velocidad alatoria de cada bot.
-
         private Color colorOriginal;
         public bool InvencibilidadBotActivada { get; private set; } = false; //Permite desactivar o activar métodos de comprobación de colisiones.
         private System.Timers.Timer? colorTimer;

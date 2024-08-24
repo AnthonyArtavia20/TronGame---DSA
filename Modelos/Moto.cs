@@ -127,16 +127,21 @@ namespace Modelos
 
         private void EliminarUtimoNodo()
         {
-
-            if (headEstela == null || headEstela.Siguiente == null) //Si resulta que la cabeza de la estala
-            {//es null, significa que no hay último elemento por eliminar.
+            // Verificamos si la cabeza de la estela es null o si su siguiente también es null.
+            if (headEstela == null) // Si no hay nodos, simplemente retornamos.
+            {
+                return;
+            }
+        
+            if (headEstela.Siguiente == null) // Si solo hay un nodo, lo eliminamos.
+            {
                 headEstela = null;
                 return;
             }
 
             var nodoActual = headEstela; //Declaramos una variable que utilizo para identificar el elemento
             //actual o inicial para luego moverme por la linkedList hasta el elemento a eliminar.
-            while (nodoActual.Siguiente.Siguiente != null) 
+            while (nodoActual.Siguiente != null && nodoActual.Siguiente.Siguiente != null) 
             {
                 /*Ejemplo de uso:
                 [2] -> [4] -> [1] -> [3] Si quiero eliminar el último elemento basta con estar sobre [1] y
