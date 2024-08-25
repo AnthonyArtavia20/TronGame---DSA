@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Anthony\\OneDrive - Estudiantes ITCR\\TEC\\2024\\Segundo semestre\\Algoritmos y Estructuras de Datos 1\\Proyectos\\Proyecto 1 Tron\\Copia para pruebas\\TronGame\\TronGame.csproj": {}
+    "C:\\Users\\Anthony\\OneDrive - Estudiantes ITCR\\TEC\\2024\\Segundo semestre\\Algoritmos y Estructuras de Datos 1\\Proyectos\\Proyecto 1 Tron\\Desarrollo del proyecto\\TronGame\\TronGame.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Anthony\\OneDrive - Estudiantes ITCR\\TEC\\2024\\Segundo semestre\\Algoritmos y Estructuras de Datos 1\\Proyectos\\Proyecto 1 Tron\\Copia para pruebas\\TronGame\\TronGame.csproj": {
+    "C:\\Users\\Anthony\\OneDrive - Estudiantes ITCR\\TEC\\2024\\Segundo semestre\\Algoritmos y Estructuras de Datos 1\\Proyectos\\Proyecto 1 Tron\\Desarrollo del proyecto\\TronGame\\TronGame.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Anthony\\OneDrive - Estudiantes ITCR\\TEC\\2024\\Segundo semestre\\Algoritmos y Estructuras de Datos 1\\Proyectos\\Proyecto 1 Tron\\Copia para pruebas\\TronGame\\TronGame.csproj",
+        "projectUniqueName": "C:\\Users\\Anthony\\OneDrive - Estudiantes ITCR\\TEC\\2024\\Segundo semestre\\Algoritmos y Estructuras de Datos 1\\Proyectos\\Proyecto 1 Tron\\Desarrollo del proyecto\\TronGame\\TronGame.csproj",
         "projectName": "TronGame",
-        "projectPath": "C:\\Users\\Anthony\\OneDrive - Estudiantes ITCR\\TEC\\2024\\Segundo semestre\\Algoritmos y Estructuras de Datos 1\\Proyectos\\Proyecto 1 Tron\\Copia para pruebas\\TronGame\\TronGame.csproj",
+        "projectPath": "C:\\Users\\Anthony\\OneDrive - Estudiantes ITCR\\TEC\\2024\\Segundo semestre\\Algoritmos y Estructuras de Datos 1\\Proyectos\\Proyecto 1 Tron\\Desarrollo del proyecto\\TronGame\\TronGame.csproj",
         "packagesPath": "C:\\Users\\Anthony\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Anthony\\OneDrive - Estudiantes ITCR\\TEC\\2024\\Segundo semestre\\Algoritmos y Estructuras de Datos 1\\Proyectos\\Proyecto 1 Tron\\Copia para pruebas\\TronGame\\obj\\",
+        "outputPath": "C:\\Users\\Anthony\\OneDrive - Estudiantes ITCR\\TEC\\2024\\Segundo semestre\\Algoritmos y Estructuras de Datos 1\\Proyectos\\Proyecto 1 Tron\\Desarrollo del proyecto\\TronGame\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Anthony\\AppData\\Roaming\\NuGet\\NuGet.Config"

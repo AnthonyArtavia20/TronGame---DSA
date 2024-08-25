@@ -13,13 +13,6 @@ namespace MallaGrid
         public List<Poderes> PoderesEnMalla { get; private set; }
         private static Random random = new Random();
 
-        private bool posicionLibre; //Esto se implementó como una forma de checkear si un espacio de los nodos está 
-        //o no ocupado antes de generar un objeto en el campo de juego, ya que existía el caso en el que
-        // sin desearlo, cuando se ejecutaba el juego, este se cerraba por una colisión con una bomba que enrealidad
-        //nunca estuvo ahí, se generaba en un lugar donde ya había otro
-
-    
-    
         public Malla(int filas, int columnas) //Constructor(Inicializadador de los atributos)
         {
             Filas = filas;

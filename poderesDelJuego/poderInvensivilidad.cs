@@ -16,6 +16,7 @@ namespace poderesDelJuego
             PosicionEnMalla = posicion;
             CargarImagenPoderes("Escudo.png");
         }
+
         public void ActivarInvulnerabilidad(Moto moto)
         {
             moto.PoderInvensivilidadActivado = true;
@@ -34,6 +35,18 @@ namespace poderesDelJuego
             timerPoder.Start();
         }
 
+        public void DesactivarInvulnerabilidad(Moto moto)
+        {
+            moto.PoderInvensivilidadActivado = false;
+
+            timerPoder?.Stop();
+            timerPoder?.Dispose();
+
+            moto.ColorEstela = colorOriginal;
+            timerParpadeo?.Stop();
+            timerParpadeo?.Dispose();
+        }
+
         private void EfectoParpadeo(Moto moto)
         {
             if (estaVisible)
@@ -45,18 +58,6 @@ namespace poderesDelJuego
                 moto.ColorEstela = colorOriginal;
             }
             estaVisible = !estaVisible;
-        }
-
-        public void DesactivarInvulnerabilidad(Moto moto)
-        {
-            moto.PoderInvensivilidadActivado = false;
-
-            timerPoder?.Stop();
-            timerPoder?.Dispose();
-
-            moto.ColorEstela = colorOriginal;
-            timerParpadeo?.Stop();
-            timerParpadeo?.Dispose();
         }
     }
 }

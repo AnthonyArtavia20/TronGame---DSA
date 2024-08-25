@@ -9,22 +9,22 @@ namespace Controladores
     {
         private int direccionActual; //Almacén del valor de dirección.
         public int VelocidadBots {get;private set;} //Atributo que se pasa desde el forms 1, es la velocidad alatoria de cada bot.
-        private Color colorOriginal;
+        private Color colorOriginal; //Color original de la moto en cuestión.
         public bool InvencibilidadBotActivada { get; private set; } = false; //Permite desactivar o activar métodos de comprobación de colisiones.
-        private System.Timers.Timer? colorTimer;
+        private System.Timers.Timer? colorTimer; //Timer para poder iterar sobre los colores de las estelas.
         private List<Color> coloresPowerUp = new List<Color> {Color.LightCoral, Color.Green, Color.Red, Color.Yellow, Color.Violet, Color.Cyan, Color.Magenta};
-        private int colorIndex = 0;
+        private int colorIndex = 0; //Se utiliza para poder recorrer los colores en una lista y posteriormente aplicarlos.
         private Color colorInvencibilidad = Color.Gold; // Color que indica invencibilidad
-        private bool estaVisible = true;
-        private System.Timers.Timer? timerParpadeoInvencibilidad;
+        private bool estaInvencible = true; //Esto se usa para comprobar la invencibilidad.
+        private System.Timers.Timer? timerParpadeoInvencibilidad; //Timer para poder fijar un temporizador en la invensibilidad.
 
         public Bots(Nodo posicionInicial,Malla malla,Color ColorEstela,int velocidadBots,int longitudInicialEstela = 3) : base(posicionInicial,malla,longitudInicialEstela)
         {
             //Nota: Se pasa Malla malla porque se necesita para poder llamar al método de la malla capáz de determinar
             //los nodos de los bordes.
-            direccionActual = random.Next(4);
-            this.ColorEstela = ColorEstela;
-            this.VelocidadBots = velocidadBots;
+            direccionActual = random.Next(4); //Inicializamos la velocidad como unn random para idnicar que dirección será la inicial en los métodos de movimiento.
+            this.ColorEstela = ColorEstela; //Inicializamos el color de le estela.
+            this.VelocidadBots = velocidadBots; //Inicializamos la velocidad delos bots.
         }
 
         public void MoverAleatoriamenteBots(List<Bots> listaDeBotsDesdeForm1, MotoJugador jugadorReal) //Implementamos un método especial que agrega todos los posibles
@@ -120,7 +120,7 @@ namespace Controladores
         {//el jugador o un bot.
             if (PoderInvensivilidadActivado || InvencibilidadBotActivada)
             {
-                return false;
+                return false; // Si algún poder está activiado, entonces no se comprueban colisiones.
             }
             else
             {
@@ -128,15 +128,23 @@ namespace Controladores
             }
         }
 
+        public override bool VerificarColision(Nodo nuevaPosicion)
+        {
+            if (InvencibilidadBotActivada)
+            {
+                return false; // Si es invencible, no hay colisión
+            }
+            return base.VerificarColision(nuevaPosicion);
+        }
         private bool VerificarColisionConOtrosBot(Nodo nodo, List<Bots> listaDeBots)//Método utilizado para verificar la colisión con los bots
         {//se logra mediante la revisión en ciclo de la lista de bots, es decir, se itera constantemente con el fin de checkear si un bot cualquiera
         //de la lista, choca con la misma posición del actual.
         
             if (PoderInvensivilidadActivado || InvencibilidadBotActivada)
             {
-                return false;
+                return false;//De igual forma acá se verifica si algún poder está activado, si lo está, no se compreban colisiones.
             }
-            foreach (var otroBot in listaDeBots)
+            foreach (var otroBot in listaDeBots) //Si no está activado ninguno, se itera la lista delos bots y se comprueba los nodos.
             {
                 if (otroBot != this && otroBot.VerificarColision(nodo))
                 {
@@ -146,9 +154,9 @@ namespace Controladores
             return false;
         }
 
-        public void UsarPoderAleatorio()
+        public void UsarPoderAleatorio() //Métodp para permitirles a los bots usar poderes a base de probabilidad.
         {
-            if (poderesPila.Tope != null && random.NextDouble() < 0.9)  //el 0.5, significa 50% de probabilidad de usar un poder.
+            if (poderesPila.Tope != null && random.NextDouble() < 0.9)  //el 0.9, significa 90% de probabilidad de usar un poder.
             {
                 var poder = poderesPila.Tope.PoderAlmacenado;
                 AplicarEfectoDelPoder(poder);
@@ -156,9 +164,9 @@ namespace Controladores
             }
         }
 
-        public override void AplicarEfectoDelPoder(Poderes poder)
+        public override void AplicarEfectoDelPoder(Poderes poder) //Aquí se llaman a los diferentes métodos que activan otros métodos encargados de activar los efectos.
         {
-            base.AplicarEfectoDelPoder(poder);
+            base.AplicarEfectoDelPoder(poder); //Se manda el poder al método original.
 
             if (poder is HiperVelocidad hiperVelocidad)
             {
@@ -182,7 +190,8 @@ namespace Controladores
             }
         }
 
-        public void IniciarEfectoVisualHiperVelocidad()
+        /*----------------------------------HIPERVELOCIDAD(Start)-----------------------------------------------*/
+        public void IniciarEfectoVisualHiperVelocidad() //Encargado del efecto visual de la hipervelocidad
         {
             colorOriginal = ColorEstela;
             colorTimer = new System.Timers.Timer(100); // Cambia el color cada 100 ms
@@ -202,15 +211,9 @@ namespace Controladores
             ColorEstela = colorOriginal;
         }
 
-        public override bool VerificarColision(Nodo nuevaPosicion)
-        {
-            if (InvencibilidadBotActivada)
-            {
-                return false; // Si es invencible, no hay colisión
-            }
-            return base.VerificarColision(nuevaPosicion);
-        }
+        /*----------------------------------HIPERVELOCIDAD(End)-----------------------------------------------*/
 
+        /*----------------------------------INVENCIBILIDAD(Start)-----------------------------------------------*/
         private void IniciarEfectoVisualInvencibilidad()
         {
             colorOriginal = ColorEstela;
@@ -221,7 +224,7 @@ namespace Controladores
 
         private void EfectoParpadeoInvencibilidad()
         {
-            if (estaVisible)
+            if (estaInvencible)
             {
                 ColorEstela = colorInvencibilidad;
             }
@@ -229,7 +232,7 @@ namespace Controladores
             {
                 ColorEstela = colorOriginal;
             }
-            estaVisible = !estaVisible;
+            estaInvencible = !estaInvencible;
         }
 
         private void DetenerEfectoVisualInvencibilidad()
@@ -238,5 +241,6 @@ namespace Controladores
             timerParpadeoInvencibilidad?.Dispose();
             ColorEstela = colorOriginal;
         }
+        /*----------------------------------INVENCIBILIDAD(End)-----------------------------------------------*/
     }
 }

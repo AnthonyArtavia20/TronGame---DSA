@@ -1,8 +1,7 @@
 using Controladores;  // Para acceder a BotsControllers, Teclas presionadas, etc.
 using MallaGrid;  // Para acceder a Malla, Nodo.
 using Modelos;  // Para Estela, Moto, etc.
-using itemsDelJuego;
-using poderesDelJuego; //Para poder acceder a los Items
+using ModularizacionForm1;
 
 namespace TronGame
 {
@@ -17,6 +16,7 @@ namespace TronGame
         public List<Bots> bots = new List<Bots>(); //Lista de bots
         private Random random = new Random(); //Utilizado para poder escoger una ubicación de spawm aleatoria de los bots-
         private System.Windows.Forms.Timer clockTimer;
+        private DibujadorMalla dibujadorMalla;
         private int contadorTicks = 0; //Para poder controlar la generación de items en el juego.
 
 
@@ -42,6 +42,8 @@ namespace TronGame
             // Establecer el nivel inicial de la barra de progreso al nivel de combustible de la moto
             barraCantidadDeCombustible.Value = motoJugador.Combustible;
 
+            dibujadorMalla = new DibujadorMalla(malla, bots, moto, (MotoJugador)moto);
+
             InicializarBots(); // Inicializamos los bots para que se puedan dibujar
 
             //Timer para refrescar la llamada al método de mover las motos automáticamente cuando no se preciona nada:
@@ -61,34 +63,6 @@ namespace TronGame
 
             clockTimer.Start();
         }
-
-        // Sobrescribe el método OnPaint para dibujar la pila de poderes
-
-    private void DibujarPilaDePoderes(Graphics g)
-    {
-        if (motoJugador.poderesPila.Tope == null) return; // No dibujar si la pila está vacía
-    
-        int y = 10;
-        int x = 1000;
-        int width = 150;
-        int height = 20;
-    
-        // Dibujar un fondo para la lista de poderes
-        g.FillRectangle(new SolidBrush(Color.FromArgb(128, 0, 0, 0)), x, y, width, height * 5);
-    
-        var nodoActual = motoJugador.poderesPila.Tope;
-        while (nodoActual != null)
-        {
-            if (nodoActual.PoderAlmacenado == null)
-            {
-                return; //Se agregó esto para evitar el aviso de que podía haber una referencia nula.
-            }
-            string poderNombre = nodoActual.PoderAlmacenado.GetType().Name;
-            g.DrawString(poderNombre, this.Font, Brushes.Yellow, new Point(x + 5, y + 5));
-            y += height;
-            nodoActual = nodoActual.siguiente;
-        }
-    }
 
 
         private void UpdateFuelBar()//Método para actualizar la barra de combustible
@@ -159,169 +133,9 @@ namespace TronGame
         //Método para poder dibujar la malla por pantalla, no dibuja la linkedList como tal, si no que dibuja lineas entre las filas y columnas, dando la ilusión de celdas.
         private void DibujarMalla(object? sender,PaintEventArgs e) //El "?" Es para que sepa que puede recibir objetos vacios o nulos, simplemente para eliminar la alerta.
         {
-            //Nota personal para el desarrollo posterior del juego:
-            /*Esto se puede utilizar para dibujar contenido adicional en cada celda, como las motos, items, poderes y demás.
-                Redibujar la Malla(A futuro): 
-                    Al redibujar la malla (por ejemplo, después de mover una moto), llamar al método this.Invalidate() o this.Refresh(), 
-                    lo que forzará al formulario a disparar el evento Paint nuevamente, refrescando así la ventana.
-            */
-
-
-            Graphics g = e.Graphics; /*Nota sobre uso de Graphics: La clase Graphics proporciona los métodos necesarios para dibujar en la pantalla.
-            En este caso, DrawLine se utiliza para dibujar las líneas que forman la malla.*/
-            
-            Pen LineasSeparadoras = new Pen(Color.Black); //Color y grosor de las líneas para ver las celdas de la malla.
-            float anchoCelda = (float)this.ClientSize.Width / malla.Columnas; //Se le hizo un cambio de int a float 
-            float altoCelda = (float)this.ClientSize.Height / malla.Filas;//ya que con int se estaba perdiendo ciertos decimales escenciales para poder calcular las celdas exactas de la lista, entonces se usa float para tener la mayor precisión.
-            
-
-            /*Dibujar lineas horizontales (Filas de la malla)
-            Aquí se hace el calculo del ancho y el alto de cada celda, se calculan dividiendo el tamaño del formulario entre el número de columnas 
-            y filas respectivamente, de modo que  la malla se ajuste al tamaño de la ventana*/
-            for (int i = 0; i < malla.Filas; i++)
-            {
-                g.DrawLine(LineasSeparadoras,0,i * altoCelda,this.ClientSize.Width, i * altoCelda);
-            }
-
-            for (int j = 0; j <= malla.Columnas; j++)
-            {
-                g.DrawLine(LineasSeparadoras, j * anchoCelda, 0, j * anchoCelda, this.ClientSize.Height);
-            }
-
-            if (moto != null) //Dibujar la Moto del jugador y su estela
-            {
-                SolidBrush motoBrush = new SolidBrush(Color.Red);
-                SolidBrush estelaBrush = new SolidBrush(moto.ColorEstela);
-        
-                var NodoEstelaMotoADibujar = moto.headEstela;
-                while (NodoEstelaMotoADibujar != null)
-                {
-                    if (NodoEstelaMotoADibujar.Posicion == null)
-                        {
-                            return; //Se agregó esto para evitar el aviso de que podía haber una referencia nula.
-                        }
-                    g.FillRectangle(estelaBrush, NodoEstelaMotoADibujar.Posicion.Y * anchoCelda, NodoEstelaMotoADibujar.Posicion.X * altoCelda, anchoCelda, altoCelda);
-                    NodoEstelaMotoADibujar = NodoEstelaMotoADibujar.Siguiente;
-                }
-        
-                g.FillRectangle(motoBrush, moto.PosicionActual.Y * anchoCelda, moto.PosicionActual.X * altoCelda, anchoCelda, altoCelda);
-            }
-            DibujarPilaDePoderes(e.Graphics);
-
-
-            //Dibujar bots -->
-
-            foreach (var bot in bots)
-            {
-                if (bot != null)
-                {
-                    SolidBrush botHeadBrush = new SolidBrush(Color.DarkGreen); // Color más oscuro para la cabeza del bot
-                    SolidBrush botEstelaBrush = new SolidBrush(bot.ColorEstela); // Color más claro para la estela del bot
-
-                    // Dibujar la estela del bot primero
-                    var NodoEstelaBotADibujar = bot.headEstela;
-                    while (NodoEstelaBotADibujar != null)
-                    {
-                        if (NodoEstelaBotADibujar.Posicion == null)
-                        {
-                            return; //Se agregó esto para evitar el aviso de que podía haber una referencia nula.
-                        }
-                        g.FillRectangle(botEstelaBrush, NodoEstelaBotADibujar.Posicion.Y * anchoCelda, NodoEstelaBotADibujar.Posicion.X * altoCelda, anchoCelda, altoCelda);
-                        NodoEstelaBotADibujar = NodoEstelaBotADibujar.Siguiente;
-                    }
-
-                    g.FillRectangle(botHeadBrush, bot.PosicionActual.Y * anchoCelda, bot.PosicionActual.X * altoCelda, anchoCelda, altoCelda);
-                }
-            }
-
-            // Dibujar los ítems
-            if (malla.ItemsEnMalla != null)
-            {
-                foreach (var item in malla.ItemsEnMalla)
-                {
-                    if (item is ItemAumentarEstela aumentarEstela)
-                    {
-                        if (aumentarEstela.PosicionEnMalla == null)
-                        {
-                            return;
-                        }
-                        if (aumentarEstela.Imagen != null)
-                        {
-                            g.DrawImage(aumentarEstela.Imagen, 
-                                aumentarEstela.PosicionEnMalla.Y * anchoCelda, 
-                                aumentarEstela.PosicionEnMalla.X * altoCelda, 
-                                anchoCelda, altoCelda);
-                        }
-                    }
-
-                    if (item is ItemCombustible combustible)
-                    {
-                        if (combustible.PosicionEnMalla == null)
-                        {
-                            return; //Se agregó esto para evitar que diera u aviso de que podía ser null
-                        }
-                        if (combustible.Imagen != null)
-                        {
-                            g.DrawImage(combustible.Imagen, 
-                                combustible.PosicionEnMalla.Y * anchoCelda, 
-                                combustible.PosicionEnMalla.X * altoCelda, 
-                                anchoCelda, altoCelda);
-                        }
-                    }
-
-                    if (item is ItemBomba bomba)
-                    {
-                        if (bomba.PosicionEnMalla == null)
-                        {
-                            return; //Se agregó esto para evitar que diera u aviso de que podía ser null
-                        }
-                        if (bomba.Imagen != null)
-                        {
-                            g.DrawImage(bomba.Imagen, 
-                                bomba.PosicionEnMalla.Y * anchoCelda, 
-                                bomba.PosicionEnMalla.X * altoCelda, 
-                                anchoCelda, altoCelda);
-                        }
-                    }
-                }
-            }
-
-            if (malla.PoderesEnMalla != null)
-            {
-                foreach (var poder in malla.PoderesEnMalla)
-                {
-                    if (poder is HiperVelocidad velocidadAumentada)
-                    {
-                        if (velocidadAumentada.PosicionEnMalla == null)
-                        {
-                            return; //Se agregó esto para evitar que diera u aviso de que podía ser null
-                        }
-                        if (velocidadAumentada.Imagen != null)
-                        {
-                            g.DrawImage(velocidadAumentada.Imagen, 
-                                velocidadAumentada.PosicionEnMalla.Y * anchoCelda, 
-                                velocidadAumentada.PosicionEnMalla.X * altoCelda, 
-                                anchoCelda, altoCelda);
-                        }
-                    }
-                    if (poder is Invensibilidad Invensibilidad)
-                    {
-                        if (Invensibilidad.PosicionEnMalla == null)
-                        {
-                            return; //Se agregó esto para evitar que diera u aviso de que podía ser null
-                        }
-                        if (Invensibilidad.Imagen != null)
-                        {
-                            g.DrawImage(Invensibilidad.Imagen, 
-                                Invensibilidad.PosicionEnMalla.Y * anchoCelda, 
-                                Invensibilidad.PosicionEnMalla.X * altoCelda, 
-                                anchoCelda, altoCelda);
-                        }
-                    }
-                }
-            }
-            
+            dibujadorMalla.Dibujar(e.Graphics, this.ClientSize);
         }
+
         private void InicializarBots()
         {   
             //Creación de una lista que contiene algunos colores para los bots.
