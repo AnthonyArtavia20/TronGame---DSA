@@ -180,6 +180,17 @@ namespace Modelos
         public void DetenerMoto()//Creado para facilitar la escritura del movimeinto en false.
         {
             estaEnMovimiento = false; // Detener la moto
+            // Devolver ítems y poderes a la malla
+            malla.DevolverItemsYPoderes(itemsCola, poderesPila);
+            // Limpiar la cola de ítems y la pila de poderes
+            while (itemsCola.Inicio != null)
+            {
+                itemsCola.Desencolar();
+            }
+            while (poderesPila.Tope != null)
+            {
+                poderesPila.Desapilar();
+            }
         }
 
         /*Ahora creamos los diferentes métodos que comprobarán si se puede realizar el movimiento que se desea, esto se logra verificando las
@@ -275,14 +286,28 @@ namespace Modelos
 
         private async void ProcesarColaDeItems()
         {
-            while (itemsCola.Inicio != null)
+            while (itemsCola.Inicio != null && estaEnMovimiento) // Añade la comprobación de estaEnMovimiento
             {
                 var nodoItem = itemsCola.Inicio;
-                if (nodoItem.ItemAlamcenado is Items item)
+                if (nodoItem?.ItemAlamcenado is Items item)
                 {
-                    AplicarEfectoDelItem(item);
+                    if (item is ItemBomba && this is Bots)
+                    {
+                        // Si es un bot y el ítem es una bomba, detén la moto y desencola el ítem
+                        DetenerMoto();
+                        itemsCola.Desencolar();
+                        break; // Sal del bucle ya que el bot se ha detenido
+                    }
+                    else
+                    {
+                        AplicarEfectoDelItem(item);
+                        itemsCola.Desencolar();
+                    }
                 }
-                itemsCola.Desencolar();
+                else
+                {
+                    itemsCola.Desencolar();
+                }
 
                 await Task.Delay(1000);
             }

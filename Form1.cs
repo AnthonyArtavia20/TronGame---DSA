@@ -106,9 +106,9 @@ namespace TronGame
             if (motoJugador.VerificarDentroDeLimites())
             {
                 clockTimer.Stop();
-                MessageBox.Show("¡Has chocado con un muro!");
-                Environment.Exit(0);
-                return;
+                //MessageBox.Show("¡Has chocado con un muro!");
+                //Environment.Exit(0);
+                //return;
             }
 
             if (motoJugador.VerificarColisionConBots(bots))

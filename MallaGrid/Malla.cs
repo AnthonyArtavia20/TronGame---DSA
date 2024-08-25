@@ -1,3 +1,4 @@
+using EstructurasDeDatos;
 using itemsDelJuego;
 using poderesDelJuego;
 
@@ -109,7 +110,7 @@ namespace MallaGrid
             }
         }
         
-        private void GenerarItem(int x, int y)
+        public void GenerarItem(int x, int y)
         {
             Items nuevoItem;
             int tipoItem = random.Next(3);
@@ -150,6 +151,49 @@ namespace MallaGrid
             Nodos[x,y].EstaOcupado = true;
         }
 
+        // En la clase Malla (Malla.cs)
+        public void DevolverItemsYPoderes(ItemsCola itemsCola, PilaDePoderes poderesPila)
+        {
+            // Devolver ítems
+            while (itemsCola.Inicio != null)
+            {
+                var nodoItem = itemsCola.Desencolar();
+                if (nodoItem != null && nodoItem.ItemAlamcenado != null)
+                {
+                    var item = nodoItem.ItemAlamcenado;
+                    // Asignar una nueva posición aleatoria al ítem
+                    int x, y;
+                    do
+                    {
+                        x = random.Next(0, Filas);
+                        y = random.Next(0, Columnas);
+                    } while (Nodos[x,y].EstaOcupado);
         
+                    item.PosicionEnMalla = Nodos[x,y];
+                    Nodos[x,y].EstaOcupado = true;
+                    ItemsEnMalla.Add(item);
+                }
+            }
+        
+            // Devolver poderes (este código parece estar bien, lo dejamos como está)
+            while (poderesPila.Tope != null)
+            {
+                var poder = poderesPila.Desapilar();
+                if (poder != null)
+                {
+                    // Asignar una nueva posición aleatoria al poder
+                    int x, y;
+                    do
+                    {
+                        x = random.Next(0, Filas);
+                        y = random.Next(0, Columnas);
+                    } while (Nodos[x,y].EstaOcupado);
+        
+                    poder.PosicionEnMalla = Nodos[x,y];
+                    Nodos[x,y].EstaOcupado = true;
+                    PoderesEnMalla.Add(poder);
+                }
+            }
+        }
     }
 }

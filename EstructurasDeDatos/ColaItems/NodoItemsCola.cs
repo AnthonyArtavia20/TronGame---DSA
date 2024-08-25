@@ -7,6 +7,5 @@ namespace EstructurasDeDatos
     {
         public itemsDelJuego.Items? ItemAlamcenado {get;set;}
         public NodoItemsCola? Siguiente {get;set;}
-
     }
 }
