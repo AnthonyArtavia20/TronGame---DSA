@@ -286,17 +286,25 @@ namespace Modelos
 
         private async void ProcesarColaDeItems()
         {
-            while (itemsCola.Inicio != null && estaEnMovimiento) // Añade la comprobación de estaEnMovimiento
+            while (itemsCola.Inicio != null && estaEnMovimiento)
             {
                 var nodoItem = itemsCola.Inicio;
                 if (nodoItem?.ItemAlamcenado is Items item)
                 {
                     if (item is ItemBomba && this is Bots)
                     {
-                        // Si es un bot y el ítem es una bomba, detén la moto y desencola el ítem
                         DetenerMoto();
                         itemsCola.Desencolar();
-                        break; // Sal del bucle ya que el bot se ha detenido
+                        break;
+                    }
+                    else if (item is ItemCombustible && Combustible >= 100)
+                    {
+                        // Si es un ítem de combustible y el tanque está lleno, lo volvemos a encolar
+                        var itemDesencolar = itemsCola.Desencolar();
+                        if (itemDesencolar != null)
+                        {
+                            itemsCola.EnColar(itemDesencolar);
+                        }
                     }
                     else
                     {
@@ -308,7 +316,7 @@ namespace Modelos
                 {
                     itemsCola.Desencolar();
                 }
-
+        
                 await Task.Delay(1000);
             }
         }

@@ -7,15 +7,16 @@ namespace Controladores
 {
     public class Bots : Moto//heredamos de la clase Moto todas sus características
     {
-        private Random random = new Random(); //Generador Random
         private int direccionActual; //Almacén del valor de dirección.
-        public Color ColorEstela {get; private set;} //Color de estela independiente que va a tener cada bot.
         public int VelocidadBots {get;private set;} //Atributo que se pasa desde el forms 1, es la velocidad alatoria de cada bot.
         private Color colorOriginal;
         public bool InvencibilidadBotActivada { get; private set; } = false; //Permite desactivar o activar métodos de comprobación de colisiones.
         private System.Timers.Timer? colorTimer;
         private List<Color> coloresPowerUp = new List<Color> {Color.LightCoral, Color.Green, Color.Red, Color.Yellow, Color.Violet, Color.Cyan, Color.Magenta};
         private int colorIndex = 0;
+        private Color colorInvencibilidad = Color.Gold; // Color que indica invencibilidad
+        private bool estaVisible = true;
+        private System.Timers.Timer? timerParpadeoInvencibilidad;
 
         public Bots(Nodo posicionInicial,Malla malla,Color ColorEstela,int velocidadBots,int longitudInicialEstela = 3) : base(posicionInicial,malla,longitudInicialEstela)
         {
@@ -171,8 +172,13 @@ namespace Controladores
             if (poder is Invensibilidad invensibilidad)
             {
                 InvencibilidadBotActivada = true;
+                IniciarEfectoVisualInvencibilidad();
                 int duracionInvencibilidad = new Random().Next(3, 5) * 1000;
-                Task.Delay(duracionInvencibilidad).ContinueWith(_ => { InvencibilidadBotActivada = false; });
+                Task.Delay(duracionInvencibilidad).ContinueWith(_ => 
+                {
+                    InvencibilidadBotActivada = false;
+                    DetenerEfectoVisualInvencibilidad();
+                });
             }
         }
 
@@ -203,6 +209,34 @@ namespace Controladores
                 return false; // Si es invencible, no hay colisión
             }
             return base.VerificarColision(nuevaPosicion);
+        }
+
+        private void IniciarEfectoVisualInvencibilidad()
+        {
+            colorOriginal = ColorEstela;
+            timerParpadeoInvencibilidad = new System.Timers.Timer(200); // Parpadeo cada 200ms
+            timerParpadeoInvencibilidad.Elapsed += (sender, e) => EfectoParpadeoInvencibilidad();
+            timerParpadeoInvencibilidad.Start();
+        }
+
+        private void EfectoParpadeoInvencibilidad()
+        {
+            if (estaVisible)
+            {
+                ColorEstela = colorInvencibilidad;
+            }
+            else
+            {
+                ColorEstela = colorOriginal;
+            }
+            estaVisible = !estaVisible;
+        }
+
+        private void DetenerEfectoVisualInvencibilidad()
+        {
+            timerParpadeoInvencibilidad?.Stop();
+            timerParpadeoInvencibilidad?.Dispose();
+            ColorEstela = colorOriginal;
         }
     }
 }
