@@ -103,8 +103,8 @@ namespace MallaGrid
             }
         }
         
-        public void GenerarItem(int x, int y)
-        {
+        public void GenerarItem(int x, int y) //Se encarga de generar un item de forma random por medio de un
+        { // switch case.
             Items nuevoItem;
             int tipoItem = random.Next(3);
         
@@ -125,8 +125,8 @@ namespace MallaGrid
             Nodos[x,y].EstaOcupado = true;
         }
         
-        private void GenerarPoder(int x, int y)
-        {
+        private void GenerarPoder(int x, int y) //Se encarga de crear objetos del tipo específico de manera 
+        { // random.
             Poderes nuevoPoder;
             int tipoPoder = random.Next(2);
         

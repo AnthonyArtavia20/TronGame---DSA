@@ -177,11 +177,6 @@ namespace Modelos
             return false;
         }
 
-        public bool DentroDeLimites(Nodo posicion) //Este método tiene la función de devolver un valor booleano en función de lo que devuelva
-        {//el método que compara los Nodos de los bordes
-            return !malla.NodosDeLosBordes(posicion);
-        }
-
         public void DetenerMoto()//Creado para facilitar la escritura del movimeinto en false.
         {
             estaEnMovimiento = false; // Detener la moto
@@ -202,7 +197,5 @@ namespace Modelos
         {//BotController.cs y MetodosColisionAplicarEfectos.cs
             ColisionYEfectos.AplicarEfectoDelPoder(poder);
         }
-
-        
     }
 }

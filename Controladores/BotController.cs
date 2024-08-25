@@ -202,14 +202,14 @@ namespace Controladores
             colorTimer.Elapsed += (sender, e) => CambiarColorEstela();
             colorTimer.Start();
         }
-        private void CambiarColorEstela()
+        private void CambiarColorEstela() //Cambia el Color de la estela segun el índice
         {
             ColorEstela = coloresPowerUp[colorIndex];
             colorIndex = (colorIndex + 1) % coloresPowerUp.Count;
         }
 
-        public void DetenerEfectoVisualHiperVelocidad()
-        {
+        public void DetenerEfectoVisualHiperVelocidad() //Detiene todos los timers  y devuelve el color
+        {//original de la estela.
             colorTimer?.Stop();
             colorTimer?.Dispose();
             ColorEstela = colorOriginal;
@@ -218,16 +218,16 @@ namespace Controladores
         /*----------------------------------HIPERVELOCIDAD(End)-----------------------------------------------*/
 
         /*----------------------------------INVENCIBILIDAD(Start)-----------------------------------------------*/
-        private void IniciarEfectoVisualInvencibilidad()
+        private void IniciarEfectoVisualInvencibilidad() //Activa los timers para dar efectos
         {
-            colorOriginal = ColorEstela;
+            colorOriginal = ColorEstela; //Además guardamos el color de la estela orignal.
             timerParpadeoInvencibilidad = new System.Timers.Timer(200); // Parpadeo cada 200ms
             timerParpadeoInvencibilidad.Elapsed += (sender, e) => EfectoParpadeoInvencibilidad();
             timerParpadeoInvencibilidad.Start();
         }
 
-        private void EfectoParpadeoInvencibilidad()
-        {
+        private void EfectoParpadeoInvencibilidad() //Activa uno u otro color base a si está activado el poder
+        {// o no.
             if (estaInvencible)
             {
                 ColorEstela = colorInvencibilidad;
@@ -239,8 +239,8 @@ namespace Controladores
             estaInvencible = !estaInvencible;
         }
 
-        private void DetenerEfectoVisualInvencibilidad()
-        {
+        private void DetenerEfectoVisualInvencibilidad() //Detiene el timer para la invencibilidad y vuelve el
+        {//color de la estela a su original.
             timerParpadeoInvencibilidad?.Stop();
             timerParpadeoInvencibilidad?.Dispose();
             ColorEstela = colorOriginal;

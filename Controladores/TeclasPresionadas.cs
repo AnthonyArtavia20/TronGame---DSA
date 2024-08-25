@@ -7,7 +7,7 @@ namespace Controladores
     {
         //Se le otorgó readonly a los atributos para que solo se puedan asignar en el momento de la declaración o dentro del constructor de la clase.
         //es decir no se puede reasignar después esto es porque la moto del jugador no debería ser reasignada luego, esto permite evitar errores difíciles de rastrear y generados sin querer.
-        private readonly Moto moto;
+        private readonly Moto moto; 
         private readonly Form form;
         public Keys ultimaTeclaPresionada = Keys.D;//Por defecto inicializada en D, almacena la tecla presioanda para poder seguir desplazandose en esa dirección.
 
@@ -80,6 +80,11 @@ namespace Controladores
             if (moto.poderesPila.Tope != null)
             {
                 var poderAplicar = moto.poderesPila.Tope.PoderAlmacenado;
+
+                if (poderAplicar == null)
+                {
+                    return; //Para evitar el mensaje de que puede ser null.
+                }
                 moto.AplicarEfectoDelPoder(poderAplicar);
                 moto.poderesPila.Desapilar();
             }
