@@ -24,19 +24,19 @@ namespace Controladores
                 switch (eventoARegistrar.KeyCode)
             {
                 case Keys.W:
-                    moto.MoverArriba();
+                    moto.Movimiento.MoverArriba();
                     ultimaTeclaPresionada = Keys.W;
                     break;
                 case Keys.S:
-                    moto.MoverAbajo();
+                    moto.Movimiento.MoverAbajo();
                     ultimaTeclaPresionada = Keys.S;
                     break;
                 case Keys.D:
-                    moto.MoverDerecha();
+                    moto.Movimiento.MoverDerecha();
                     ultimaTeclaPresionada = Keys.D;
                     break;
                 case Keys.A:
-                    moto.MoverIzquierda();
+                    moto.Movimiento.MoverIzquierda();
                     ultimaTeclaPresionada = Keys.A;
                     break;
                 case Keys.M: // Tecla para mover el tope de la pila al fondo
@@ -60,19 +60,19 @@ namespace Controladores
         {//tecla precionada, esto se logra almacenando la tecla en una variable que se compara, haciendo que
             if (ultimaTeclaPresionada == Keys.W)//se comparé aquí y se actualice la coordenadas de la moto.
             {
-                moto.MoverArriba();
+                moto.Movimiento.MoverArriba();
             }
             else if (ultimaTeclaPresionada == Keys.S)
             {
-                moto.MoverAbajo();
+                moto.Movimiento.MoverAbajo();
             }
             else if (ultimaTeclaPresionada == Keys.A)
             {
-                moto.MoverIzquierda();
+                moto.Movimiento.MoverIzquierda();
             }
             else if (ultimaTeclaPresionada == Keys.D)
             {
-                moto.MoverDerecha();
+                moto.Movimiento.MoverDerecha();
             }
         }
         private void AplicarPoderDelTope()

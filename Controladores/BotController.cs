@@ -157,8 +157,12 @@ namespace Controladores
         public void UsarPoderAleatorio() //Métodp para permitirles a los bots usar poderes a base de probabilidad.
         {
             if (poderesPila.Tope != null && random.NextDouble() < 0.9)  //el 0.9, significa 90% de probabilidad de usar un poder.
-            {
+            {   
                 var poder = poderesPila.Tope.PoderAlmacenado;
+                if (poder == null)
+                {
+                    return; //Se agregó esto para evitar referencias nullas y evitar el mensaje de precaución.
+                }
                 AplicarEfectoDelPoder(poder);
                 poderesPila.Desapilar();
             }
@@ -166,13 +170,13 @@ namespace Controladores
 
         public override void AplicarEfectoDelPoder(Poderes poder) //Aquí se llaman a los diferentes métodos que activan otros métodos encargados de activar los efectos.
         {
-            base.AplicarEfectoDelPoder(poder); //Se manda el poder al método original.
+            ColisionYEfectos.AplicarEfectoDelPoder(poder); //Se manda el poder al método original.
 
             if (poder is HiperVelocidad hiperVelocidad)
             {
                 IniciarEfectoVisualHiperVelocidad();
 
-                // Programar la desactivación del efecto visual
+                //Se inicia el timer para la duración del efecto.
                 int duracionHiperVelocidad = new Random().Next(3, 5) * 1000;
                 Task.Delay(duracionHiperVelocidad).ContinueWith(_ => DetenerEfectoVisualHiperVelocidad());
             }

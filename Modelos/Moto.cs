@@ -21,15 +21,18 @@ namespace Modelos
         //ATRIBUTOS DE LA MOTO:
         public Nodo PosicionActual {get; private set;}//Creamos un atributo para la posición inicial de la moto
         public NodoEstelaMoto? headEstela;
-        private int longitudEstela;
+        public int LongitudEstela { get; set; }
         public Color ColorEstela { get; set; }
         public int Velocidad {get; set;} //Se le qutó el private al set, esto con el fin de poder modificar la velocidad desde la clase
                                             //Hipervelocidad.
-        public int Combustible {get;private set;}
+        public int Combustible {get; set;}
+        public MovimientoMoto Movimiento { get; private set; } //Referencia a la clase donde se tiene la lógica del movimiento.
+        public MotoColisionAplicarPoderesItems ColisionYEfectos { get; private set; }
         public bool estaEnMovimiento;
         protected Random random;
         public Malla malla; //Se crea una variable de tipo Malla(La clase) para luego hacer verificación de límites
-        private ItemsCola itemsCola = new ItemsCola();
+
+        public ItemsCola itemsCola = new ItemsCola();
         public PilaDePoderes poderesPila = new PilaDePoderes();
 
         public bool PoderInvensivilidadActivado { get; set; }
@@ -42,12 +45,14 @@ namespace Modelos
             random = new Random();
             PosicionActual = posicionInicial; //Posición actual de la moto "Donde aparece"
             this.malla = malla; //Para poder comparar los nodos de los bordes
-            longitudEstela = longitudInicialEstela+1;
+            LongitudEstela = longitudInicialEstela + 1;
             Velocidad = 1; //Velocidad setteable
             //Velocidad = random.Next(1,3); //Velocidad entre 1 y 3
             Combustible = 100;// Tanque de combustible lleno
             estaEnMovimiento = true; // Inicialmente la moto está en movimiento
             PoderInvensivilidadActivado = false; // Por defecto, no es invulnerable
+            Movimiento = new MovimientoMoto(this);
+            ColisionYEfectos = new MotoColisionAplicarPoderesItems(this);
             InicializarEstaleMoto();
         }
 
@@ -58,7 +63,7 @@ namespace Modelos
             NodoEstelaMoto headEstela = new NodoEstelaMoto{Posicion = PosicionActual}; //Se crea un nuevo nodo para la cabeza de la moto.
 
             var actual = headEstela; //variable temporal para no afectar a la referencia de la cabeza
-            for (int i = 1; i < longitudEstela; i++) //Iteramos y en el proceso creamos nuevos nodos hasta la lonitud fijada.
+            for (int i = 1; i < LongitudEstela; i++) //Iteramos y en el proceso creamos nuevos nodos hasta la lonitud fijada.
             {
                 actual.Siguiente = new NodoEstelaMoto {Posicion = PosicionActual}; //Hacemos la referencia de siguiente del nodo como actual.siguiente.
                 actual = actual.Siguiente; //luego definimos actual como el nodo que se acaba de crear para así seguir agregando referencias de "siguiente".
@@ -84,7 +89,7 @@ namespace Modelos
             //con la posición actual y la referencia siguiente que simboliza la cabeza que siempre va al frente.
             headEstela = nuevoNodoDelFrente; //Posteriormente se estableze la cabeza como el nuevo nodo que se acaba de crear
 
-            while (ContadorDeNodosEstela() >= longitudEstela+1)//Esta condición sirve solamente para poder lograr mantener la estela de un tamaño
+            while (ContadorDeNodosEstela() >= LongitudEstela+1)//Esta condición sirve solamente para poder lograr mantener la estela de un tamaño
             {///determinado, ya que la estela se tiene que ir difuminando, no tiene una longitud infinita.
                 EliminarUtimoNodo();
             }
@@ -95,10 +100,10 @@ namespace Modelos
             A medida que la estela crece, significa que la moto avanza, por lo tanto su combustible debe
             disminuir. Actualmente será 5 unidades por cada celda de la malla*/
 
-            VerificarColisionConItems();
-            ProcesarColaDeItems();
+            ColisionYEfectos.VerificarColisionConItems();
+            ColisionYEfectos.ProcesarColaDeItems();
 
-            VerificarColisionConPoderes();
+            ColisionYEfectos.VerificarColisionConPoderes();
             //ProcesarPilaDePoderes();
 
             // ---------Consumir combustible-------------
@@ -193,193 +198,11 @@ namespace Modelos
             }
         }
 
-        /*Ahora creamos los diferentes métodos que comprobarán si se puede realizar el movimiento que se desea, esto se logra verificando las
-        condiciones incialmente establecidas en la clase MallaGrid, donde se verifica si, por ejemplo, arriba del primer nodo hay algo, en ese caso
-        como no hay nada ya que el primer nodo es [0,0] encima de él hay Null, es decir nada, en este caso no se hace la condición de:
-        [i-1,j] que permite establecer la posición una fila atrás. Es bajo este mismo principio que se cumpleas las 4 condiciones.*/
+        public virtual void AplicarEfectoDelPoder(Poderes poder) //Esto se usa para coenctar los métodos entre 
+        {//BotController.cs y MetodosColisionAplicarEfectos.cs
+            ColisionYEfectos.AplicarEfectoDelPoder(poder);
+        }
+
         
-        public void MoverArriba()
-        {
-            for (int i = 0; i < Velocidad; i++)
-            {
-                //Como se mencionó anteriormente, esto utiliza el atributo de 
-                //Arriba, ya que PosicionActual es un nodo de la clase Nodo que puede utilizar .Arriba, pudiendo actualizar 
-                //de [i,j] a [i -1 ,j] y así con todas
-                if (PosicionActual.Arriba != null)
-                {
-                    MoverEstelaMoto(PosicionActual.Arriba);
-                }
-                else
-                {
-                    break;
-                }
-            }
-        }
-
-        public void MoverAbajo()
-        {
-            for (int i = 0; i < Velocidad; i++)
-            {
-                 //Pasa de [i,j] -> [i + 1,j]
-                if (PosicionActual.Abajo != null)
-                {
-                    MoverEstelaMoto(PosicionActual.Abajo);
-                }
-                else
-                {
-                    break;
-                }
-            }
-        }
-
-        public void MoverDerecha()
-        {
-            for (int i = 0; i < Velocidad; i++)
-            {
-                 //Pasa de [i,j] -> [i,j + 1]
-                if (PosicionActual.Derecha != null)
-                {
-                    MoverEstelaMoto(PosicionActual.Derecha);
-                }
-                else
-                {
-                    break;
-                }
-            }
-        }
-
-        public void MoverIzquierda()
-        {
-            for (int i = 0; i < Velocidad; i++)
-            {
-                if (PosicionActual.Izquierda != null)
-                {
-                    MoverEstelaMoto(PosicionActual.Izquierda);
-                }
-                else
-                {
-                    break;
-                }
-            }
-        }
-
-        //Método para poder detectar colisiones con los items en la malla:
-        public void VerificarColisionConItems()
-        {
-            foreach (var item in malla.ItemsEnMalla)
-            {
-                if (item.PosicionEnMalla == null)
-                {
-                    return;
-                }
-                if (PosicionActual.X == item.PosicionEnMalla.X && PosicionActual.Y == item.PosicionEnMalla.Y)
-                {
-                    // Se ha detectado una colisión con un ítem
-                    itemsCola.EnColar(new NodoItemsCola { ItemAlamcenado = item });
-                    // Remover el ítem de la malla
-
-                    malla.ItemsEnMalla.Remove(item);
-                    break; // Salir del bucle después de aplicar el efecto
-                }
-            }
-        }
-
-        private async void ProcesarColaDeItems()
-        {
-            while (itemsCola.Inicio != null && estaEnMovimiento)
-            {
-                var nodoItem = itemsCola.Inicio;
-                if (nodoItem?.ItemAlamcenado is Items item)
-                {
-                    if (item is ItemBomba && this is Bots)
-                    {
-                        DetenerMoto();
-                        itemsCola.Desencolar();
-                        break;
-                    }
-                    else if (item is ItemCombustible && Combustible >= 100)
-                    {
-                        // Si es un ítem de combustible y el tanque está lleno, lo volvemos a encolar
-                        var itemDesencolar = itemsCola.Desencolar();
-                        if (itemDesencolar != null)
-                        {
-                            itemsCola.EnColar(itemDesencolar);
-                        }
-                    }
-                    else
-                    {
-                        AplicarEfectoDelItem(item);
-                        itemsCola.Desencolar();
-                    }
-                }
-                else
-                {
-                    itemsCola.Desencolar();
-                }
-        
-                await Task.Delay(1000);
-            }
-        }
-
-        public void AplicarEfectoDelItem(Items item)//Se vuelve virtual para poder aplicar polimorfismo
-        {
-            switch (item)
-            {
-                case ItemAumentarEstela aumentoEstela:
-                    longitudEstela += aumentoEstela.incrementoEstela; // Aumentar la longitud de la estela
-                    break; 
-                case ItemCombustible combustible:
-                    Combustible += combustible.AplicarEfecto(); // Aumentar el combustible
-                    break;
-                case ItemBomba bomba:
-                    if (this is MotoJugador && !PoderInvensivilidadActivado) // Verifica si es el jugador porque anteriormente esto dió un reguero de bugs
-                    {
-                        DetenerMoto();
-                        MessageBox.Show("¡Perdiste por una bomba!"); // Muestra el mensaje de que perdió
-                        Environment.Exit(0);
-                    }
-                    else if(this is Bots && !PoderInvensivilidadActivado)
-                    {
-                        DetenerMoto(); // Detiene el movimiento de los bots
-                    }
-                    break;
-            }
-        }
-
-        public void VerificarColisionConPoderes()
-        {
-            foreach (var poder in malla.PoderesEnMalla)
-            {
-                if (poder.PosicionEnMalla == null)
-                    {
-                        return; //Se agregó esto para evitar una referencia nula.
-                    }
-                if (PosicionActual.X == poder.PosicionEnMalla.X && PosicionActual.Y == poder.PosicionEnMalla.Y)
-                {
-                    //Se ha detectado una colisión con un poder
-                    poderesPila.Apilar(new NodosPilaDePoderes {PoderAlmacenado = poder});
-
-                    // Remover el ítem de la malla
-                    malla.PoderesEnMalla.Remove(poder);
-                    break;
-                }
-            }
-        }
-
-        public virtual void AplicarEfectoDelPoder(Poderes poder)
-        {
-            switch(poder)
-            {
-                case HiperVelocidad velocidadAumentada:
-                    velocidadAumentada.ActivarHiperVelocidad(this);
-                    break;
-                case Invensibilidad invensibilidad:
-                    invensibilidad.ActivarInvulnerabilidad(this);
-                    break;
-                default:
-                    break;
-                
-            }
-        }
     }
 }
