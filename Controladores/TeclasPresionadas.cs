@@ -55,7 +55,6 @@ namespace Controladores
                 }
                 form.Invalidate(); //Redibujado forzado del forms para mostrar cambios.
         }
-
         private void MantenerEnLaUltimaDireccion() //Se llamará al movimiento correspondiente según la última
         {//tecla precionada, esto se logra almacenando la tecla en una variable que se compara, haciendo que
             if (ultimaTeclaPresionada == Keys.W)//se comparé aquí y se actualice la coordenadas de la moto.

@@ -7,6 +7,6 @@ namespace EstructurasDeDatos
     public class NodosPilaDePoderes
     {
         public poderesDelJuego.Poderes? PoderAlmacenado {get;set;}
-        public NodosPilaDePoderes? siguiente {get; set;}
+        public NodosPilaDePoderes? Siguiente {get; set;}
     }
 }

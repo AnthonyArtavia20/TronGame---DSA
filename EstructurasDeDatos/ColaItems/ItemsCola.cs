@@ -5,6 +5,13 @@ namespace EstructurasDeDatos
     public class ItemsCola
     {
         private NodoItemsCola? _inicio;
+        public NodoItemsCola? Inicio //Nos permite devolver el valor de _inicio como un apropiedad de "Solo lectura" y que además no sea 
+        {//editable desde niguna otra parte.
+            get 
+            {
+                return _inicio;
+            }
+        }
 
         public void EnColar(NodoItemsCola item) //Agregar al final, funciona como una lista enlazada
         {
@@ -46,13 +53,6 @@ namespace EstructurasDeDatos
             return _inicio;
         }
 
-        public NodoItemsCola? Inicio //Nos permite devolver el valor de _inicio como un apropiedad de "Solo lectura" y que además no sea 
-        {//editable desde niguna otra parte.
-            get 
-            {
-                return _inicio;
-            }
-        }
     }
 
 }

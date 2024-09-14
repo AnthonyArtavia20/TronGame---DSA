@@ -196,7 +196,7 @@ namespace ModularizacionForm1
                 }
 
                 y += height;
-                nodoActual = nodoActual.siguiente;
+                nodoActual = nodoActual.Siguiente;
             }
         }
     }

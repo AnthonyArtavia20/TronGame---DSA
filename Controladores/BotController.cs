@@ -96,7 +96,7 @@ namespace Controladores
                 {
                     movimientoElegido = posiblesMovimientos[random.Next(posiblesMovimientos.Count)];
                 }
-                else if (moviminetosMalosAlPropio.Count > 0 && random.NextDouble() < 1.0) //20% de probabilidad de escoger un movimiento que mate al bot(ej: chocar con una estela)
+                else if (moviminetosMalosAlPropio.Count > 0 && random.NextDouble() <= 0.9) //20% de probabilidad de escoger un movimiento que mate al bot(ej: chocar con una estela)
                 {
                     movimientoElegido = moviminetosMalosAlPropio[random.Next(moviminetosMalosAlPropio.Count)];
                 }
@@ -154,7 +154,7 @@ namespace Controladores
             return false;
         }
 
-        public void UsarPoderAleatorio() //Métodp para permitirles a los bots usar poderes a base de probabilidad.
+        public void UsarPoderAleatorio() //Método para permitirles a los bots usar poderes a base de probabilidad.
         {
             if (poderesPila.Tope != null && random.NextDouble() < 0.9)  //el 0.9, significa 90% de probabilidad de usar un poder.
             {   

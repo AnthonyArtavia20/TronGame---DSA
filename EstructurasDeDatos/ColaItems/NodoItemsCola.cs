@@ -5,7 +5,7 @@ namespace EstructurasDeDatos
 {
     public class NodoItemsCola
     {
-        public itemsDelJuego.Items? ItemAlamcenado {get;set;}
+        public itemsDelJuego.Items? ItemAlmacenado {get;set;}
         public NodoItemsCola? Siguiente {get;set;}
     }
 }

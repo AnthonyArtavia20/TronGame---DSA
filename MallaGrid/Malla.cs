@@ -151,9 +151,9 @@ namespace MallaGrid
             while (itemsCola.Inicio != null)
             {
                 var nodoItem = itemsCola.Desencolar();
-                if (nodoItem != null && nodoItem.ItemAlamcenado != null)
+                if (nodoItem != null && nodoItem.ItemAlmacenado != null)
                 {
-                    var item = nodoItem.ItemAlamcenado;
+                    var item = nodoItem.ItemAlmacenado;
                     // Asignar una nueva posición aleatoria al ítem
                     int x, y;
                     do

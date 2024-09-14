@@ -21,7 +21,7 @@ namespace EstructurasDeDatos
                 /nteriormente.*/
                 NodosPilaDePoderes auxiliar = _tope;
                 _tope = poder;
-                _tope.siguiente = auxiliar;
+                _tope.Siguiente = auxiliar;
             }
         }
 
@@ -35,26 +35,26 @@ namespace EstructurasDeDatos
             }
     
             Poderes poder = _tope.PoderAlmacenado;
-            _tope = Tope.siguiente; //En tope va a quedar lo que hay en tope.siguiente.
+            _tope = Tope.Siguiente; //En tope va a quedar lo que hay en tope.siguiente.
                 //Haciendo que la referencia al elemento actual, se elimine.
             return poder;
         }
 
         public void MoverTopeAlFondo()
         {
-            if (_tope == null || _tope.siguiente == null) return; //Verificamos que no esté vacio//null.
+            if (_tope == null || _tope.Siguiente == null) return; //Verificamos que no esté vacio//null.
     
             var topeActual = _tope; //Se guarada el valor del elemento en el tope.
-            _tope = _tope.siguiente; //Se guarda el valor del elemento siguiente al tope
+            _tope = _tope.Siguiente; //Se guarda el valor del elemento siguiente al tope
     
             var ultimo = _tope; // Se asigna dicho valor a una variable llamada último.
-            while (ultimo.siguiente != null) // Mientras ese valor.siguiente, sea distinto de null, se sigue
+            while (ultimo.Siguiente != null) // Mientras ese valor.siguiente, sea distinto de null, se sigue
             {//avanzando:
-                ultimo = ultimo.siguiente;
+                ultimo = ultimo.Siguiente;
             }
-            ultimo.siguiente = topeActual; //Cuando el elemento siguiente es null, entonces ese null pasa a ser
+            ultimo.Siguiente = topeActual; //Cuando el elemento siguiente es null, entonces ese null pasa a ser
             //el elemento que se almacenó
-            topeActual.siguiente = null;//finalmente al siguiente de ese nuevo elemento se apunta a null.
+            topeActual.Siguiente = null;//finalmente al siguiente de ese nuevo elemento se apunta a null.
         }
     }
 }

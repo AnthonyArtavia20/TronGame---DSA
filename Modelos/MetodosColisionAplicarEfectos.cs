@@ -32,7 +32,7 @@ namespace Modelos
                 if (moto.PosicionActual.X == item.PosicionEnMalla.X && moto.PosicionActual.Y == item.PosicionEnMalla.Y)
                 {
                     // Se ha detectado una colisión con un ítem
-                    moto.itemsCola.EnColar(new NodoItemsCola { ItemAlamcenado = item });
+                    moto.itemsCola.EnColar(new NodoItemsCola { ItemAlmacenado = item });
                     // Remover el ítem de la malla
 
                     moto.malla.ItemsEnMalla.Remove(item);
@@ -46,7 +46,7 @@ namespace Modelos
             while (moto.itemsCola.Inicio != null && moto.estaEnMovimiento)
             {
                 var nodoItem = moto.itemsCola.Inicio;
-                if (nodoItem?.ItemAlamcenado is Items item)
+                if (nodoItem?.ItemAlmacenado is Items item)
                 {
                     if (item is ItemBomba && this.moto is Bots)
                     {

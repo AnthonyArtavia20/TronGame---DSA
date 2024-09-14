@@ -4,7 +4,6 @@ namespace poderesDelJuego
 {
     public class Poderes
     {
-        public string? Nombre {get; protected set;}
         public Image? Imagen {get; protected set;}
         public Nodo? PosicionEnMalla {get; set;}
 

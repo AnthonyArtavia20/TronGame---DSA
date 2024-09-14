@@ -1,9 +1,7 @@
 //cONTIENE ATRIBUTOS: Posición, velocidad, combustible... y métodos para el movimiento}
 using MallaGrid;
 using EstructurasDeDatos;
-using itemsDelJuego;
 using poderesDelJuego;
-using Controladores;
 
 
 namespace Modelos

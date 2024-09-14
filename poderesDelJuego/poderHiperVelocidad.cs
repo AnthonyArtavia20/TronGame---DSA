@@ -20,7 +20,6 @@ namespace poderesDelJuego
         // Atributo para almacenar el color original
         private Color colorOriginal;
 
-
         public HiperVelocidad(Nodo posicion)
         {
             ValorDeVelocidad = random.Next(2, 3);
